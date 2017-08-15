@@ -7,6 +7,8 @@ import ru.makproductions.geekbrains.gameproject.GameMain;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.width = 1600;
+		config.height = 1200;
 		new LwjglApplication(new GameMain(), config);
 	}
 }
