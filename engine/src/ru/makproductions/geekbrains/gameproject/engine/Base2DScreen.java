@@ -5,7 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 
 
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.MatrixUtils;
@@ -23,6 +25,7 @@ public class Base2DScreen implements Screen,InputProcessor {
 
     protected final Matrix4 matWorldToGl = new Matrix4();
 
+    private final Matrix3 matScreenToWorld = new Matrix3();
     public Base2DScreen(Game game){
         this.game = game;
     }
@@ -34,14 +37,7 @@ public class Base2DScreen implements Screen,InputProcessor {
         batch = new SpriteBatch();
     }
 
-    @Override
-    public void render(float delta) {
 
-    }
-
-    protected void resize(Rect worldBounds){
-
-    }
 
     @Override
     public void resize(int width, int height) {
@@ -55,6 +51,8 @@ public class Base2DScreen implements Screen,InputProcessor {
         worldBounds.setWidth(WORLD_HEIGHT * aspectRatio);
         MatrixUtils.calcTransitionMatrix(matWorldToGl,worldBounds,glBounds);
         batch.setProjectionMatrix(matWorldToGl);
+        MatrixUtils.calcTransitionMatrix(matScreenToWorld,screenBounds,worldBounds);
+        resize(worldBounds);
     }
 
     @Override
@@ -80,6 +78,62 @@ public class Base2DScreen implements Screen,InputProcessor {
         batch = null;
     }
 
+
+
+    protected void touchDown(Vector2 touch, int pointer) {
+
+    }
+    protected void touchUp(Vector2 touch, int pointer) {
+
+    }
+    protected void touchMove(Vector2 touch, int pointer) {
+
+    }
+
+    private final Vector2 touch = new Vector2();
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        touch.set(screenX,screenBounds.getHeight() - 1f - screenY).mul(matScreenToWorld);
+        touchDown(touch,pointer);
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        touch.set(screenX,screenBounds.getHeight() - 1f - screenY).mul(matScreenToWorld);
+        touchUp(touch,pointer);
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        touch.set(screenX,screenBounds.getHeight() - 1f - screenY).mul(matScreenToWorld);
+        touchMove(touch,pointer);
+        return false;
+    }
+
+    @Override
+    public void render(float delta) {
+
+    }
+
+    protected void resize(Rect worldBounds){
+
+    }
+
+    //region Extra
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
+    }
+
+
     @Override
     public boolean keyDown(int keycode) {
         return false;
@@ -94,30 +148,5 @@ public class Base2DScreen implements Screen,InputProcessor {
     public boolean keyTyped(char character) {
         return false;
     }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.println("touchDown");
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
+    //endregion
 }

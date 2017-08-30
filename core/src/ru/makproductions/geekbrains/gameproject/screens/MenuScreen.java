@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 import ru.makproductions.geekbrains.gameproject.Ship;
 import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
@@ -26,6 +27,11 @@ public class MenuScreen extends Base2DScreen {
         super.show();
         img = new Texture("StartOfStarFighter.png");
         ship = new Ship();
+    }
+
+    @Override
+    protected void touchDown(Vector2 touch, int pointer) {
+        System.out.println(touch);
     }
 
     @Override
