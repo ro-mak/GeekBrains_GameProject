@@ -5,17 +5,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.makproductions.geekbrains.gameproject.Ship;
 import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
+import ru.makproductions.geekbrains.gameproject.engine.Sprite2DTexture;
+import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
 
 
 public class MenuScreen extends Base2DScreen {
-    Texture img;
-    Ship ship;
-
+    private Texture img;
+    private Ship ship;
+    private Sprite circle;
+    private Sprite2DTexture textureShip;
     public MenuScreen(Game game){
         super(game);
     }
@@ -26,7 +29,10 @@ public class MenuScreen extends Base2DScreen {
     public void show () {
         super.show();
         img = new Texture("StartOfStarFighter.png");
+        textureShip = new Sprite2DTexture("Ship.png");
         ship = new Ship();
+        circle = new Sprite(new TextureRegion(textureShip));
+        circle.setWidthProportion(0.235f);
     }
 
     @Override
@@ -41,6 +47,7 @@ public class MenuScreen extends Base2DScreen {
         batch.begin();
         batch.draw(img, -0.5f,-0.5f,1f,1f);
         ship.draw(batch);
+        circle.draw(batch);
         batch.end();
     }
 
