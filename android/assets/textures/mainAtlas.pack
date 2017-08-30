@@ -1,0 +1,57 @@
+
+mainAtlas.png
+format: RGBA8888
+filter: MipMapLinearNearest,Linear
+repeat: none
+Star
+  rotate: false
+  xy: 8, 326
+  size: 1200, 1600
+  orig: 1200, 1600
+  offset: 0, 0
+  index: -1
+ExitButton
+  rotate: false
+  xy: 8, 120
+  size: 212, 204
+  orig: 212, 204
+  offset: 0, 0
+  index: -1
+Ship
+  rotate: false
+  xy: 1216, 1708
+  size: 111, 218
+  orig: 111, 218
+  offset: 0, 0
+  index: -1
+Fire
+  rotate: false
+  xy: 8, 2
+  size: 140, 116
+  orig: 140, 116
+  offset: 0, 0
+  index: -1
+
+mainAtlas2.png
+format: RGBA8888
+filter: MipMapLinearNearest,Linear
+repeat: none
+StartOfStarFighter
+  rotate: false
+  xy: 8, 2
+  size: 1200, 1600
+  orig: 1200, 1600
+  offset: 0, 0
+  index: -1
+
+mainAtlas3.png
+format: RGBA8888
+filter: MipMapLinearNearest,Linear
+repeat: none
+StartButton
+  rotate: false
+  xy: 8, 2
+  size: 1114, 451
+  orig: 1114, 451
+  offset: 0, 0
+  index: -1
