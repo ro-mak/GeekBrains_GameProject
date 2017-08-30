@@ -12,7 +12,6 @@ import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
 
 
 public class MenuScreen extends Base2DScreen {
-    SpriteBatch batch;
     Texture img;
     Ship ship;
 
@@ -25,7 +24,6 @@ public class MenuScreen extends Base2DScreen {
     @Override
     public void show () {
         super.show();
-        batch = new SpriteBatch();
         img = new Texture("StartOfStarFighter.png");
         ship = new Ship();
     }
@@ -35,14 +33,13 @@ public class MenuScreen extends Base2DScreen {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(img, 0, 0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        batch.draw(img, -0.5f,-0.5f,1f,1f);
         ship.draw(batch);
         batch.end();
     }
 
     @Override
     public void dispose () {
-        batch.dispose();
         img.dispose();
         ship.getTexture().dispose();
         super.dispose();
