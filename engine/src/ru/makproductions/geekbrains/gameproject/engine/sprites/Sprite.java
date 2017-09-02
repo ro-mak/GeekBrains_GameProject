@@ -43,13 +43,13 @@ public class Sprite extends Rect {
         setWidth(height * aspectRatio);
     }
 
-    protected boolean touchDown(Vector2 touch, int pointer) {
+    public boolean touchDown(Vector2 touch, int pointer) {
         return false;
     }
-    protected boolean touchUp(Vector2 touch, int pointer) {
+    public boolean touchUp(Vector2 touch, int pointer) {
         return false;
     }
-    protected boolean touchMove(Vector2 touch, int pointer) {
+    public boolean touchMove(Vector2 touch, int pointer) {
         return false;
     }
 

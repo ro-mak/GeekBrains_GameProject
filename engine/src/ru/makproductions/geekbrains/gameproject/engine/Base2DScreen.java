@@ -25,7 +25,7 @@ public class Base2DScreen implements Screen,InputProcessor {
 
     protected final Matrix4 matWorldToGl = new Matrix4();
 
-    private final Matrix3 matScreenToWorld = new Matrix3();
+    protected final Matrix3 matScreenToWorld = new Matrix3();
     public Base2DScreen(Game game){
         this.game = game;
     }
@@ -94,23 +94,27 @@ public class Base2DScreen implements Screen,InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        touch.set(screenX,screenBounds.getHeight() - 1f - screenY).mul(matScreenToWorld);
+        touch.set(screenX,revertY(screenY)).mul(matScreenToWorld);
         touchDown(touch,pointer);
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        touch.set(screenX,screenBounds.getHeight() - 1f - screenY).mul(matScreenToWorld);
+        touch.set(screenX,revertY(screenY)).mul(matScreenToWorld);
         touchUp(touch,pointer);
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        touch.set(screenX,screenBounds.getHeight() - 1f - screenY).mul(matScreenToWorld);
+        touch.set(screenX,revertY(screenY)).mul(matScreenToWorld);
         touchMove(touch,pointer);
         return false;
+    }
+
+    protected float revertY(int screenY){
+        return screenBounds.getHeight() - 1f - screenY;
     }
 
     @Override

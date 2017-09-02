@@ -8,6 +8,7 @@ import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gamepro
 import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
 
 public class Star extends Sprite {
+    private final float SPAWN_HEIGHT = 0.8f;
     private Rect worldBounds;
     private final Vector2 speed = new Vector2();
 
@@ -21,7 +22,7 @@ public class Star extends Sprite {
     public void resize(Rect worldBounds) {
         this.worldBounds = worldBounds;
         float posX = Rnd.nextFloat(worldBounds.getLeft(),worldBounds.getRight());
-        float posY = Rnd.nextFloat(worldBounds.getBottom() + 0.6f,worldBounds.getTop());
+        float posY = Rnd.nextFloat(worldBounds.getBottom() + SPAWN_HEIGHT,worldBounds.getTop());
         position.set(posX,posY);
     }
 
@@ -35,6 +36,6 @@ public class Star extends Sprite {
         if(getRight() < worldBounds.getLeft()) setLeft(worldBounds.getRight());
         if(getLeft() > worldBounds.getRight()) setRight(worldBounds.getLeft());
         if(getTop() < worldBounds.getBottom()) setBottom(worldBounds.getTop());
-        if(getBottom() > worldBounds.getTop()) setTop(worldBounds.getBottom() + 0.8f);
+        if(getBottom() > worldBounds.getTop()) setTop(worldBounds.getBottom());
     }
 }
