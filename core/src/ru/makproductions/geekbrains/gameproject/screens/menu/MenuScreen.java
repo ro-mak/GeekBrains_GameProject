@@ -2,6 +2,7 @@ package ru.makproductions.geekbrains.gameproject.screens.menu;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -27,6 +28,8 @@ public class MenuScreen extends Base2DScreen {
     private Ship ship;
 
     private Button startButton;
+    private Music music_level1;
+
     public MenuScreen(Game game){
         super(game);
     }
@@ -47,6 +50,7 @@ public class MenuScreen extends Base2DScreen {
         }
         startButton = new Button(atlas.findRegion("StartButton"),0.4f);
         ship = new Ship(atlas.findRegion("Ship"),0,0,0.2f,new Vector2(0f,-0.2f));
+        playMusic();
     }
 
     @Override
@@ -67,6 +71,12 @@ public class MenuScreen extends Base2DScreen {
     public void render (float delta) {
         update(delta);
         draw();
+    }
+
+    private void playMusic(){
+        music_level1 = Gdx.audio.newMusic(Gdx.files.internal("music/StarFighterMusicWarriorDrums.wav"));
+        music_level1.setLooping(true);
+        music_level1.play();
     }
 
     private void update(float deltaTime){
