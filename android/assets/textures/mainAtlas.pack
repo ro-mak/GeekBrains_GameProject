@@ -3,30 +3,30 @@ mainAtlas.png
 format: RGBA8888
 filter: MipMapLinearNearest,Linear
 repeat: none
-Star
+Galaxies
   rotate: false
-  xy: 8, 326
+  xy: 8, 344
   size: 1200, 1600
   orig: 1200, 1600
   offset: 0, 0
   index: -1
 ExitButton
   rotate: false
-  xy: 8, 120
+  xy: 8, 132
   size: 212, 204
   orig: 212, 204
   offset: 0, 0
   index: -1
 Ship
   rotate: false
-  xy: 1216, 1708
+  xy: 1216, 1726
   size: 111, 218
   orig: 111, 218
   offset: 0, 0
   index: -1
 Fire
   rotate: false
-  xy: 8, 2
+  xy: 8, 8
   size: 140, 116
   orig: 140, 116
   offset: 0, 0
@@ -36,9 +36,9 @@ mainAtlas2.png
 format: RGBA8888
 filter: MipMapLinearNearest,Linear
 repeat: none
-StartOfStarFighter
+Star
   rotate: false
-  xy: 8, 2
+  xy: 8, 8
   size: 1200, 1600
   orig: 1200, 1600
   offset: 0, 0
@@ -48,9 +48,21 @@ mainAtlas3.png
 format: RGBA8888
 filter: MipMapLinearNearest,Linear
 repeat: none
+StartOfStarFighter
+  rotate: false
+  xy: 8, 8
+  size: 1200, 1600
+  orig: 1200, 1600
+  offset: 0, 0
+  index: -1
+
+mainAtlas4.png
+format: RGBA8888
+filter: MipMapLinearNearest,Linear
+repeat: none
 StartButton
   rotate: false
-  xy: 8, 2
+  xy: 8, 8
   size: 1114, 451
   orig: 1114, 451
   offset: 0, 0

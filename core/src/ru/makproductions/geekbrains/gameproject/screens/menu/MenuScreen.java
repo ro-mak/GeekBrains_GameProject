@@ -46,6 +46,7 @@ public class MenuScreen extends Base2DScreen {
             stars[i] = new Star(atlas.findRegion("Star")
                     , vx, vy, starWidth);
         }
+        ship = new Ship(atlas.findRegion("Ship"),0,0,0.2f,new Vector2(0f,-0.2f));
     }
 
     @Override
@@ -54,6 +55,7 @@ public class MenuScreen extends Base2DScreen {
         for (int i = 0; i < stars.length; i++) {
             stars[i].resize(worldBounds);
         }
+        ship.resize(worldBounds);
     }
 
     @Override
@@ -81,6 +83,7 @@ public class MenuScreen extends Base2DScreen {
         for (int i = 0; i < stars.length; i++) {
             stars[i].draw(batch);
         }
+        ship.draw(batch);
         batch.end();
     }
 
@@ -93,12 +96,12 @@ public class MenuScreen extends Base2DScreen {
     @Override
     public boolean keyDown(int keycode) {
         //System.out.println("Key "+ keycode + " Down");
-        if(keycode == Input.Keys.A){
-            ship.setX(ship.getX() - ship.getSpeed());
-        }
-        if(keycode == Input.Keys.D){
-            ship.setX(ship.getX() + ship.getSpeed());
-        }
+//        if(keycode == Input.Keys.A){
+//            ship.setX(ship.getX() - ship.getSpeed());
+//        }
+//        if(keycode == Input.Keys.D){
+//            ship.setX(ship.getX() + ship.getSpeed());
+//        }
         return super.keyDown(keycode);
     }
 
@@ -117,9 +120,9 @@ public class MenuScreen extends Base2DScreen {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
        // System.out.println("Screen touchedDown: x:" + screenX + " y:"+screenY);
-        if(screenX <600 && screenX > 50 && screenY > 260 && screenY < 330){
-            ship.setEngineStarted(true);
-        }
+//        if(screenX <600 && screenX > 50 && screenY > 260 && screenY < 330){
+//            ship.setEngineStarted(true);
+//        }
         return super.touchDown(screenX, screenY, pointer, button);
     }
 
