@@ -23,8 +23,8 @@ public class GameScreen extends Base2DScreen {
     private Background background;
     private Music music_level1;
 
-    private MenuShip ship;
-    private final float SHIP_HEIGHT = 0.4f;
+    private GameShip ship;
+    private final float SHIP_HEIGHT = 0.2f;
     private TextureRegion[] shipTextureRegions = new TextureRegion[2];
     @Override
     public void show() {
@@ -33,13 +33,15 @@ public class GameScreen extends Base2DScreen {
         shipTextureRegions[0] = atlas.findRegion("Ship");
         shipTextureRegions[1] = atlas.findRegion("Fire");
         background = new Background(atlas.findRegion("Galaxies"));
-        ship = new MenuShip(shipTextureRegions,0,0,SHIP_HEIGHT,new Vector2(0f,-0.2f));
+        ship = new GameShip(shipTextureRegions,0,0,SHIP_HEIGHT,new Vector2(0f,0f));
+        ship.setEngineStarted(true);
         playMusic();
     }
 
     @Override
     protected void resize(Rect worldBounds) {
         background.resize(worldBounds);
+        ship.resize(worldBounds);
     }
 
     private void playMusic(){
@@ -58,6 +60,7 @@ public class GameScreen extends Base2DScreen {
 
     private void update(float delta){
         ship.update(delta);
+        background.update(delta);
     }
     private void checkCollisions(){
 
@@ -82,4 +85,32 @@ public class GameScreen extends Base2DScreen {
         music_level1.dispose();
         super.dispose();
     }
+
+    @Override
+    protected void touchDown(Vector2 touch, int pointer) {
+        ship.touchDown(touch,pointer);
+    }
+
+    @Override
+    protected void touchUp(Vector2 touch, int pointer) {
+        ship.touchUp(touch,pointer);
+    }
+
+    @Override
+    protected void touchMove(Vector2 touch, int pointer) {
+        ship.touchMove(touch,pointer);
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        ship.keyDown(keycode);
+        return super.keyDown(keycode);
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        ship.keyUp(keycode);
+        return super.keyUp(keycode);
+    }
+
 }

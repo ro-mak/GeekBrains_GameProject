@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
+import ru.makproductions.geekbrains.gameproject.engine.utils.Regions;
 
 public class Sprite extends Rect {
 
@@ -20,6 +21,10 @@ public class Sprite extends Rect {
         regions[0] = region;
 
     }
+
+    public Sprite(TextureRegion region, int rows, int cols, int frames) {
+                regions = Regions.split(region, rows, cols, frames);
+            }
 
     public void draw(SpriteBatch batch) {
         batch.draw(regions[currentFrame],

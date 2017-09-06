@@ -15,9 +15,9 @@ public class MenuShip extends Ship {
     @Override
     public void update(float delta){
         if(engineStarted) {
-            speed.y += acceleration;
+            speed0.y += acceleration;
             this.position.x += Rnd.nextFloat(-0.0001f, 0.0001f);
-            this.position.y += speed.y;
+            this.position.y += speed0.y;
         }
     }
 
