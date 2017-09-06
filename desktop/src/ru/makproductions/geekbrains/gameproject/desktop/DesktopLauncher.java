@@ -8,10 +8,10 @@ import ru.makproductions.geekbrains.gameproject.StarGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		float aspect = 9f/16f;
-		//float aspect = 3f/4f;
-		config.width = 360;
-		config.height = (int)(config.width / aspect);
+		//float aspect = 9f/16f;
+		float aspect = 3f/4f;
+		config.height = 900;
+		config.width = (int)(config.height * aspect);
 		new LwjglApplication(new StarGame(), config);
 	}
 

@@ -6,37 +6,43 @@ import com.badlogic.gdx.math.Vector2;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.MatrixUtils;
 import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
 
-public class Button extends Sprite {
+public class ScaledTouchUpButton extends Sprite {
 
+    private int pointer;
+    private final ActionListener actionListener;
     private float originalScale;
     private boolean touched;
-    public Button(TextureRegion region, float width) {
+
+    public ScaledTouchUpButton(TextureRegion region, float height,ActionListener actionListener) {
         super(region);
-        position.set(0f,0.4f);
-        setWidthProportion(width);
+        this.actionListener = actionListener;
+        setHeightProportion(height);
         originalScale = getScale();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
+        if(touched || !isMe(touch)) return  false;
         touched = true;
+        this.pointer = pointer;
         setScale(getScale() - 0.1f);
-        return super.touchDown(touch, pointer);
+        return true;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        if(touched){
+        if(!touched || this.pointer != pointer)return false;
+        if(isMe(touch)) {
             setScale(getScale() + 0.1f);
-            touched = false;
+            actionListener.actionPerformed(this);
         }
-        return super.touchUp(touch, pointer);
+        touched = false;
+        scale = 1f;
+        return true;
     }
 
     @Override
     public boolean touchMove(Vector2 touch, int pointer) {
-        setScale(originalScale);
-        touched = false;
-        return super.touchMove(touch, pointer);
+        return false;
     }
 }

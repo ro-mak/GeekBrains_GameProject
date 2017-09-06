@@ -5,29 +5,38 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import ru.makproductions.geekbrains.gameproject.Ship;
 import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
-import ru.makproductions.geekbrains.gameproject.engine.buttons.Button;
+import ru.makproductions.geekbrains.gameproject.engine.buttons.ActionListener;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
-import ru.makproductions.geekbrains.gameproject.screens.game.stars.Star;
+import ru.makproductions.geekbrains.gameproject.screens.game.GameScreen;
+import ru.makproductions.geekbrains.gameproject.screens.stars.StarsOfMenu;
+import ru.makproductions.geekbrains.gameproject.screens.Background;
 
+public class MenuScreen extends Base2DScreen implements ActionListener {
 
-public class MenuScreen extends Base2DScreen {
-
-    private static final float STAR_WIDTH = 0.03f;
+    private static final float STAR_HEIGHT = 0.03f;
+    private static final int STAR_COUNT = 25;
 
     private TextureAtlas atlas;
 
     private Background background;
 
-    private Star[] stars;
+    private StarsOfMenu[] stars;
 
-    private Ship ship;
+    private MenuShip ship;
+    private final float SHIP_HEIGHT = 0.4f;
+    private TextureRegion[] shipTextureRegions = new TextureRegion[2];
 
-    private Button startButton;
+    private ButtonStartGame startButton;
+    private final float BUTTON_START_HEIGHT = 0.2f;
+
+    private ButtonExit exitButton;
+    private final float BUTTON_EXIT_HEIGHT = 0.2f;
+
     private Music music_level1;
 
     public MenuScreen(Game game){
@@ -38,18 +47,22 @@ public class MenuScreen extends Base2DScreen {
     public void show () {
         super.show();
         atlas = new TextureAtlas("textures/mainAtlas.pack");
+        shipTextureRegions[0] = atlas.findRegion("Ship");
+        shipTextureRegions[1] = atlas.findRegion("Fire");
+
         background = new Background(atlas.findRegion("StartOfStarFighter"));
 
-        stars = new Star[25];
+        stars = new StarsOfMenu[STAR_COUNT];
         for(int i = 0; i < stars.length; i++) {
-            float starWidth = STAR_WIDTH * Rnd.nextFloat(0.5f,0.8f);
+            float starHeight = STAR_HEIGHT * Rnd.nextFloat(0.5f,0.8f);
             float vx = Rnd.nextFloat(0,0.006f);
             float vy = Rnd.nextFloat(-0.0008f,0.0008f);
-            stars[i] = new Star(atlas.findRegion("Star")
-                    , vx, vy, starWidth);
+            stars[i] = new StarsOfMenu(atlas.findRegion("Star")
+                    , vx, vy, starHeight);
         }
-        startButton = new Button(atlas.findRegion("StartButton"),0.4f);
-        ship = new Ship(atlas.findRegion("Ship"),0,0,0.2f,new Vector2(0f,-0.2f));
+        startButton = new ButtonStartGame(atlas,BUTTON_START_HEIGHT,this);
+        exitButton = new ButtonExit(atlas,BUTTON_EXIT_HEIGHT,this);
+        ship = new MenuShip(shipTextureRegions,0,0,SHIP_HEIGHT,new Vector2(0f,-0.2f));
         playMusic();
     }
 
@@ -60,17 +73,17 @@ public class MenuScreen extends Base2DScreen {
             stars[i].resize(worldBounds);
         }
         ship.resize(worldBounds);
-    }
-
-    @Override
-    protected void touchDown(Vector2 touch, int pointer) {
-        System.out.println(touch);
+        startButton.resize(worldBounds);
+        exitButton.resize(worldBounds);
     }
 
     @Override
     public void render (float delta) {
         update(delta);
         draw();
+        if (ship != null&&ship.position.y > 1f){
+            game.setScreen(new GameScreen(game));
+        }
     }
 
     private void playMusic(){
@@ -83,6 +96,7 @@ public class MenuScreen extends Base2DScreen {
         for (int i = 0; i < stars.length; i++) {
             stars[i].update(deltaTime);
         }
+        ship.update(deltaTime);
     }
 
     private void draw(){
@@ -94,6 +108,7 @@ public class MenuScreen extends Base2DScreen {
             stars[i].draw(batch);
         }
         startButton.draw(batch);
+        exitButton.draw(batch);
         ship.draw(batch);
         batch.end();
     }
@@ -101,69 +116,54 @@ public class MenuScreen extends Base2DScreen {
     @Override
     public void dispose () {
         atlas.dispose();
+        music_level1.dispose();
         super.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        //System.out.println("Key "+ keycode + " Down");
-//        if(keycode == Input.Keys.A){
-//            ship.setX(ship.getX() - ship.getSpeed());
-//        }
-//        if(keycode == Input.Keys.D){
-//            ship.setX(ship.getX() + ship.getSpeed());
-//        }
         return super.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        //System.out.println("Key " + keycode+ " Up");
         return super.keyUp(keycode);
     }
 
     @Override
     public boolean keyTyped(char character) {
-        //System.out.println("Key " + character + " typed");
         return super.keyTyped(character);
     }
-
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-       // System.out.println("Screen touchedDown: x:" + screenX + " y:"+screenY);
-//        if(screenX <600 && screenX > 50 && screenY > 260 && screenY < 330){
-//            ship.setEngineStarted(true);
-//        }
-        Vector2 touchCoordinates = new Vector2(screenX,revertY(screenY));
-        if(startButton.isMe(touchCoordinates.mul(matScreenToWorld)))startButton.touchDown(touchCoordinates,pointer);
-        return super.touchDown(screenX, screenY, pointer, button);
+    public void actionPerformed(Object source) {
+        if(source == startButton){
+            startButton.setTop(20f);
+            ship.setEngineStarted(true);
+        }else if(source == exitButton){
+            Gdx.app.exit();
+        }else{
+            throw new RuntimeException("Unknown source =" + source);
+        }
     }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-     //   System.out.println("Screen touchedUp: x:" + screenX + " y:"+screenY);
-        Vector2 touchCoordinates = new Vector2(screenX,revertY(screenY));
-        if(startButton.isMe(touchCoordinates.mul(matScreenToWorld)))startButton.touchUp(touchCoordinates,pointer);
-        return super.touchUp(screenX, screenY, pointer, button);
+    protected void touchUp(Vector2 touch, int pointer) {
+        super.touchUp(touch, pointer);
+        startButton.touchUp(touch,pointer);
+        exitButton.touchUp(touch,pointer);
+
+    }
+    @Override
+    protected void touchDown(Vector2 touch, int pointer) {
+        super.touchDown(touch,pointer);
+        startButton.touchDown(touch,pointer);
+        exitButton.touchDown(touch,pointer);
     }
 
     @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-      //  System.out.println("Screen touchedDragged: x:" + screenX + " y:"+screenY);
-        Vector2 touchCoordinates = new Vector2(screenX,revertY(screenY));
-        if(!startButton.isMe(touchCoordinates.mul(matScreenToWorld)))startButton.touchMove(touchCoordinates,pointer);
-        return super.touchDragged(screenX, screenY, pointer);
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-      //  System.out.println("MouseMoved: x:" + screenX + " y:"+screenY);
-        return super.mouseMoved(screenX, screenY);
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-      //  System.out.println("Scrolled:" +amount);
-        return super.scrolled(amount);
+    protected void touchMove(Vector2 touch, int pointer) {
+        super.touchMove(touch, pointer);
+        startButton.touchMove(touch,pointer);
+        exitButton.touchMove(touch,pointer);
     }
 }

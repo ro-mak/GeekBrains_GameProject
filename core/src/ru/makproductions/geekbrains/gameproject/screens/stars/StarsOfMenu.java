@@ -1,4 +1,4 @@
-package ru.makproductions.geekbrains.gameproject.screens.game.stars;
+package ru.makproductions.geekbrains.gameproject.screens.stars;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -7,15 +7,15 @@ import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gamepro
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
 import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
 
-public class Star extends Sprite {
+public class StarsOfMenu extends Sprite {
     private final float SPAWN_HEIGHT = 0.8f;
     private Rect worldBounds;
     private final Vector2 speed = new Vector2();
 
-    public Star(TextureRegion region,float vx,float vy, float width){
+    public StarsOfMenu(TextureRegion region, float vx, float vy, float height){
         super(region);
         speed.set(vx,vy);
-        setWidthProportion(width);
+        setHeightProportion(height);
     }
 
     @Override
