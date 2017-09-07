@@ -42,7 +42,7 @@ public class GameScreen extends Base2DScreen {
         for (int i = 0; i < stars.length; i++) {
             float starHeight = STARS_HEIGHT * Rnd.nextFloat(0.3f,0.8f);
             float vx = Rnd.nextFloat(-0.0008f,0.0008f);
-            float vy = Rnd.nextFloat(-0.0008f,0.0008f);
+            float vy = Rnd.nextFloat(-0.0001f,-0.1f);
             stars[i] = new StarsOfGame(atlas.findRegion("Star"),ship,vx,vy,starHeight);
         }
         playMusic();

@@ -33,7 +33,7 @@ public class StarsOfGame extends Sprite {
     public void update(float deltaTime) {
         position.mulAdd(speed, deltaTime);
         if (ship.isMoving()) {
-            position.mulAdd((ship.getSpeed().rotate(180)),deltaTime/4);
+            position.x -= ship.getSpeed().x/1000;
         }
         checkAndHandleBounds();
     }
