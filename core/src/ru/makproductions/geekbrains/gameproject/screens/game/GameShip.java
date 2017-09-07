@@ -54,6 +54,10 @@ public class GameShip extends Ship {
         isMoving = true;
     }
 
+    public Vector2 getSpeed() {
+        return speed;
+    }
+
     private void moveRight() {
         speed.set(speed0).rotate(180);
         isMoving = true;

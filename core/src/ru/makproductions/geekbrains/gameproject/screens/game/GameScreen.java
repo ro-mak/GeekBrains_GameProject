@@ -40,7 +40,7 @@ public class GameScreen extends Base2DScreen {
         ship = new GameShip(shipTextureRegions,0,0,SHIP_HEIGHT,new Vector2(0f,0f));
         ship.setEngineStarted(true);
         for (int i = 0; i < stars.length; i++) {
-            float starHeight = STARS_HEIGHT * Rnd.nextFloat(0.5f,0.8f);
+            float starHeight = STARS_HEIGHT * Rnd.nextFloat(0.3f,0.8f);
             float vx = Rnd.nextFloat(-0.0008f,0.0008f);
             float vy = Rnd.nextFloat(-0.0008f,0.0008f);
             stars[i] = new StarsOfGame(atlas.findRegion("Star"),ship,vx,vy,starHeight);

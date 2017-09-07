@@ -13,13 +13,11 @@ public class StarsOfGame extends Sprite {
     private Rect worldBounds;
     private final Vector2 speed = new Vector2();
     private GameShip ship;
-    private Vector2 shipPosition;
 
     public StarsOfGame(TextureRegion region, GameShip ship, float vx, float vy, float height) {
         super(region);
         this.ship = ship;
         speed.set(vx, vy);
-        shipPosition = ship.position;
         setHeightProportion(height);
     }
 
@@ -34,18 +32,8 @@ public class StarsOfGame extends Sprite {
     @Override
     public void update(float deltaTime) {
         position.mulAdd(speed, deltaTime);
-        if (shipPosition.x > 0 && ship.isMoving()) {
-            if(position.x < 0) {
-                position.x = position.x - speed.x;
-            }else if (position.x > 0){
-                position.x = position.x + speed.x;
-            }
-        } else if (shipPosition.x < 0 && ship.isMoving()) {
-            if(position.x < 0) {
-                position.x = position.x + speed.x;
-            }else if(position.x > 0){
-                position.x = position.x - speed.x;
-            }
+        if (ship.isMoving()) {
+            position.mulAdd((ship.getSpeed().rotate(180)),deltaTime/4);
         }
         checkAndHandleBounds();
     }
