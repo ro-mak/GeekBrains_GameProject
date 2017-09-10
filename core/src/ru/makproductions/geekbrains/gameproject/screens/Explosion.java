@@ -21,7 +21,9 @@ public class Explosion extends Sprite {
         currentFrame = 0;
         this.position.set(position);
         setHeightProportion(height);
-        if(soundExplosion.play() == -1) throw new RuntimeException("soundExplosion.play() == -1");
+        long id;
+        if((id = soundExplosion.play()) == -1) throw new RuntimeException("soundExplosion.play() == -1");
+        soundExplosion.setVolume(id,0.1f);
     }
 
     @Override
