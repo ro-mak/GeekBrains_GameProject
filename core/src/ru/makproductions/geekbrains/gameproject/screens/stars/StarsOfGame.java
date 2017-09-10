@@ -6,15 +6,15 @@ import com.badlogic.gdx.math.Vector2;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
 import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
-import ru.makproductions.geekbrains.gameproject.screens.game.GameShip;
+import ru.makproductions.geekbrains.gameproject.screens.game.PlayerShip;
 
 public class StarsOfGame extends Sprite {
 
     private Rect worldBounds;
     private final Vector2 speed = new Vector2();
-    private GameShip ship;
+    private PlayerShip ship;
 
-    public StarsOfGame(TextureRegion region, GameShip ship, float vx, float vy, float height) {
+    public StarsOfGame(TextureRegion region, PlayerShip ship, float vx, float vy, float height) {
         super(region);
         this.ship = ship;
         speed.set(vx, vy);

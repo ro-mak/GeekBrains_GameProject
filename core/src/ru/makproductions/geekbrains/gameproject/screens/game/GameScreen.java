@@ -3,15 +3,18 @@ package ru.makproductions.geekbrains.gameproject.screens.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.makproductions.geekbrains.gameproject.screens.BulletPool;
 import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
 import ru.makproductions.geekbrains.gameproject.screens.Background;
+import ru.makproductions.geekbrains.gameproject.screens.Explosion;
+import ru.makproductions.geekbrains.gameproject.screens.ExplosionPool;
 import ru.makproductions.geekbrains.gameproject.screens.stars.StarsOfGame;
 
 
@@ -20,29 +23,32 @@ public class GameScreen extends Base2DScreen {
         super(game);
     }
 
+    private final BulletPool bulletPool = new BulletPool();
+    private ExplosionPool explosionPool;
+    private Sound soundExplosion;
     private TextureAtlas atlas;
     private Background background;
     private Music music_level1;
     private StarsOfGame[] stars;
     private final int STARS_COUNT = 250;
     private final float STARS_HEIGHT = 0.05f;
-    private GameShip ship;
+    private PlayerShip ship;
     private final float SHIP_HEIGHT = 0.2f;
-    private TextureRegion[] shipTextureRegions = new TextureRegion[2];
+
     @Override
     public void show() {
         super.show();
         atlas = new TextureAtlas("textures/mainAtlas.pack");
-        shipTextureRegions[0] = atlas.findRegion("Ship");
-        shipTextureRegions[1] = atlas.findRegion("Fire");
+        soundExplosion = Gdx.audio.newSound(Gdx.files.internal("music/Explosion.wav"));
+        explosionPool = new ExplosionPool(atlas,soundExplosion);
         background = new Background(atlas.findRegion("Galaxies"));
         stars = new StarsOfGame[STARS_COUNT];
-        ship = new GameShip(shipTextureRegions,0,0,SHIP_HEIGHT,new Vector2(0f,0f));
+        ship = new PlayerShip(atlas,0,0,SHIP_HEIGHT,new Vector2(0f,0f),bulletPool);
         ship.setEngineStarted(true);
         for (int i = 0; i < stars.length; i++) {
             float starHeight = STARS_HEIGHT * Rnd.nextFloat(0.3f,0.8f);
             float vx = Rnd.nextFloat(-0.0008f,0.0008f);
-            float vy = Rnd.nextFloat(-0.0001f,-0.1f);
+            float vy = Rnd.nextFloat(-0.0001f,-0.02f);
             stars[i] = new StarsOfGame(atlas.findRegion("Star"),ship,vx,vy,starHeight);
         }
         playMusic();
@@ -71,19 +77,28 @@ public class GameScreen extends Base2DScreen {
         draw();
     }
 
+    float timer;
     private void update(float delta){
-        ship.update(delta);
+        if((timer+=delta) >= 3) {
+            timer = 0;
+            Explosion explosion = explosionPool.obtain();
+            explosion.setExplosion(0.1f, new Vector2(0f, 0f));
+        }
         background.update(delta);
         for (int i = 0; i < stars.length; i++) {
             stars[i].update(delta);
         }
+        bulletPool.updateActiveSprites(delta);
+        explosionPool.updateActiveSprites(delta);
+        ship.update(delta);
     }
     private void checkCollisions(){
 
     }
 
     private void deleteAllDestroyed(){
-
+        bulletPool.freeAllDestroyedActiveObjects();
+        explosionPool.freeAllDestroyedActiveObjects();
     }
 
     private void draw(){
@@ -94,6 +109,8 @@ public class GameScreen extends Base2DScreen {
         for (int i = 0; i < stars.length; i++) {
             stars[i].draw(batch);
         }
+        bulletPool.drawActiveObjects(batch);
+        explosionPool.drawActiveObjects(batch);
         ship.draw(batch);
         batch.end();
     }
@@ -102,6 +119,9 @@ public class GameScreen extends Base2DScreen {
     public void dispose() {
         atlas.dispose();
         music_level1.dispose();
+        soundExplosion.dispose();
+        bulletPool.dispose();
+        explosionPool.dispose();
         super.dispose();
     }
 

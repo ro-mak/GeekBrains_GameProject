@@ -32,12 +32,13 @@ public class ScaledTouchUpButton extends Sprite {
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
         if(!touched || this.pointer != pointer)return false;
+        touched = false;
+        scale = 1f;
         if(isMe(touch)) {
             setScale(getScale() + 0.1f);
             actionListener.actionPerformed(this);
         }
-        touched = false;
-        scale = 1f;
+
         return true;
     }
 

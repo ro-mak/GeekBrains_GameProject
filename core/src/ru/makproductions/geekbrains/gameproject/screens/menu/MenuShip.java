@@ -1,15 +1,20 @@
 package ru.makproductions.geekbrains.gameproject.screens.menu;
 
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
+import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
 import ru.makproductions.geekbrains.gameproject.screens.Ship;
 
 public class MenuShip extends Ship {
 
-    public MenuShip(TextureRegion[] regions, float vx, float vy, float height, Vector2 position) {
-        super(regions, vx, vy, height, position);
+    public MenuShip(TextureAtlas atlas, float vx, float vy, float height, Vector2 position) {
+        super(atlas.findRegion("Ship"), vx, vy, height, position);
+        acceleration = 0.0003f;
+        fireTexture = atlas.findRegion("Fire");
     }
 
     @Override
@@ -19,6 +24,14 @@ public class MenuShip extends Ship {
             this.position.x += Rnd.nextFloat(-0.0001f, 0.0001f);
             this.position.y += speed0.y;
         }
+    }
+    @Override
+    protected void startEngine(SpriteBatch batch){
+        fire = new Sprite(fireTexture);
+        fire.position.y = this.getBottom() - 0.1f;
+        fire.position.x = this.position.x - 0.02f + Rnd.nextFloat(-0.01f,0.01f);
+        fire.setHeightProportion(height);
+        fire.draw(batch);
     }
 
 }

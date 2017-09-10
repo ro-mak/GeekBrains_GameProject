@@ -29,7 +29,6 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
 
     private MenuShip ship;
     private final float SHIP_HEIGHT = 0.4f;
-    private TextureRegion[] shipTextureRegions = new TextureRegion[2];
 
     private ButtonStartGame startButton;
     private final float BUTTON_START_HEIGHT = 0.2f;
@@ -47,8 +46,6 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     public void show () {
         super.show();
         atlas = new TextureAtlas("textures/mainAtlas.pack");
-        shipTextureRegions[0] = atlas.findRegion("Ship");
-        shipTextureRegions[1] = atlas.findRegion("Fire");
 
         background = new Background(atlas.findRegion("StartOfStarFighter"));
 
@@ -62,7 +59,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
         }
         startButton = new ButtonStartGame(atlas,BUTTON_START_HEIGHT,this);
         exitButton = new ButtonExit(atlas,BUTTON_EXIT_HEIGHT,this);
-        ship = new MenuShip(shipTextureRegions,0,0,SHIP_HEIGHT,new Vector2(0f,-0.2f));
+        ship = new MenuShip(atlas,0,0,SHIP_HEIGHT,new Vector2(0f,-0.2f));
         playMusic();
     }
 

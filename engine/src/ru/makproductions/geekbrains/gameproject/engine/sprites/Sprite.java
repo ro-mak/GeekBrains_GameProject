@@ -9,10 +9,13 @@ import ru.makproductions.geekbrains.gameproject.engine.utils.Regions;
 
 public class Sprite extends Rect {
 
+    private boolean isDestroyed;
     protected float angle;
     protected float scale = 1f;
     protected TextureRegion[] regions;
     protected int currentFrame;
+
+    public Sprite(){}
 
     public Sprite(TextureRegion region){
         if(region == null)
@@ -46,6 +49,18 @@ public class Sprite extends Rect {
         float aspectRatio = regions[currentFrame].getRegionWidth()
                 / (float)regions[currentFrame].getRegionHeight();
         setWidth(height * aspectRatio);
+    }
+
+    public void destroy(){
+        isDestroyed = true;
+    }
+
+    public boolean isDestroyed(){
+        return isDestroyed;
+    }
+
+    public void cancelDestruction(){
+        isDestroyed = false;
     }
 
     public boolean touchDown(Vector2 touch, int pointer) {

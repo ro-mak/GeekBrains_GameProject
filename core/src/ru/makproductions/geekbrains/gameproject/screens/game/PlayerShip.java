@@ -2,16 +2,17 @@ package ru.makproductions.geekbrains.gameproject.screens.game;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.makproductions.geekbrains.gameproject.screens.BulletPool;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
 import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
 import ru.makproductions.geekbrains.gameproject.screens.Ship;
 
 
-public class GameShip extends Ship {
+public class PlayerShip extends Ship {
 
     private static final int INVALID_POINTER = -1;
     private int leftPointer = INVALID_POINTER;
@@ -25,18 +26,24 @@ public class GameShip extends Ship {
     private final float BOTTOM_MARGIN = 0.1f;
     private boolean touched;
     private int sideTouched;
-    private Rect worldBounds;
     private Vector2 speed = new Vector2();
 
     @Override
     public void resize(Rect worldBounds) {
-        this.worldBounds = worldBounds;
-        setBottom(worldBounds.getBottom() + BOTTOM_MARGIN);
         super.resize(worldBounds);
+        setBottom(worldBounds.getBottom() + BOTTOM_MARGIN);
     }
 
-    public GameShip(TextureRegion[] regions, float vx, float vy, float height, Vector2 position) {
-        super(regions, vx, vy, height, position);
+    public PlayerShip(TextureAtlas atlas, float vx, float vy, float height,
+                      Vector2 position, BulletPool bulletPool) {
+        super(atlas.findRegion("Ship"), vx, vy, height, position);
+        this.bulletPool = bulletPool;
+        fireTexture = atlas.findRegion("Fire");
+        bulletSpeed.set(0f,0.5f);
+        bulletDamage = 1;
+        bulletTexture = atlas.findRegion("PlayerBullet");
+        bulletHeight = 0.05f;
+        reloadInterval = 0.25f;
     }
 
     @Override
@@ -49,13 +56,13 @@ public class GameShip extends Ship {
         this.speed0.x = -0.5f;
     }
 
+    public Vector2 getSpeed() {
+        return speed;
+    }
+
     private void moveLeft() {
         speed.set(speed0);
         isMoving = true;
-    }
-
-    public Vector2 getSpeed() {
-        return speed;
     }
 
     private void moveRight() {
@@ -147,8 +154,10 @@ public class GameShip extends Ship {
     public void update(float delta) {
         if (getLeft() < worldBounds.getLeft()) {
             setLeft(worldBounds.getLeft());
+            stop();
         } else if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
+            stop();
         }
         int side = sideOfTheScreen();
         if (side == -1) {
@@ -157,5 +166,10 @@ public class GameShip extends Ship {
             moveRight();
         }
         position.mulAdd(speed, delta);
+        reloadTimer  += delta;
+        if(reloadTimer >= reloadInterval){
+            reloadTimer = 0f;
+            shoot();
+        }
     }
 }
