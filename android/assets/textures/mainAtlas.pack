@@ -5,35 +5,56 @@ filter: MipMapLinearNearest,Linear
 repeat: none
 Galaxies
   rotate: false
-  xy: 8, 344
+  xy: 8, 429
   size: 1200, 1600
   orig: 1200, 1600
   offset: 0, 0
   index: -1
+Enemy
+  rotate: false
+  xy: 8, 187
+  size: 420, 234
+  orig: 420, 234
+  offset: 0, 0
+  index: -1
 ExitButton
   rotate: false
-  xy: 8, 132
+  xy: 1216, 1825
   size: 212, 204
   orig: 212, 204
   offset: 0, 0
   index: -1
 Ship
   rotate: false
-  xy: 1216, 1726
+  xy: 436, 203
   size: 111, 218
   orig: 111, 218
   offset: 0, 0
   index: -1
-Fire
+EnemyEngineFire
   rotate: false
   xy: 8, 8
+  size: 133, 171
+  orig: 133, 171
+  offset: 0, 0
+  index: -1
+EnemyBullet
+  rotate: false
+  xy: 1216, 1614
+  size: 72, 203
+  orig: 72, 203
+  offset: 0, 0
+  index: -1
+Fire
+  rotate: false
+  xy: 1436, 1913
   size: 140, 116
   orig: 140, 116
   offset: 0, 0
   index: -1
 PlayerBullet
   rotate: false
-  xy: 228, 174
+  xy: 555, 259
   size: 31, 162
   orig: 31, 162
   offset: 0, 0

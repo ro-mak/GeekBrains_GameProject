@@ -8,10 +8,10 @@ import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
 
 public class Bullet extends Sprite {
 
-    private Rect worldBounds;
-    private final Vector2 speed = new Vector2();
-    private int damage;
-    private Object owner;
+    protected Rect worldBounds;
+    protected final Vector2 speed = new Vector2();
+    protected int damage;
+    protected Object owner;
 
     public Bullet() {
         regions = new TextureRegion[1];

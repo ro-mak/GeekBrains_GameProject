@@ -29,6 +29,8 @@ public class Ship extends Sprite {
         return this.speed0;
     }
 
+    public Ship(){}
+
     public Ship(TextureRegion shipTexture, float vx, float vy, float height,
                 Vector2 position) {
         super(shipTexture);
@@ -46,15 +48,15 @@ public class Ship extends Sprite {
     protected float bulletHeight;
     protected final Vector2 bulletSpeed = new Vector2();
     protected int bulletDamage;
-    private final Vector2 bulletPosition = new Vector2();
+    protected final Vector2 bulletPosition = new Vector2();
     protected float reloadInterval;
     protected float reloadTimer;
-    protected float BULLET_MARGIN = 0.1f;
+    protected float bullet_margin = 0.1f;
 
     protected void shoot() {
         Bullet bullet = bulletPool.obtain();
         bulletPosition.x = position.x;
-        bulletPosition.y = position.y + BULLET_MARGIN;
+        bulletPosition.y = position.y + bullet_margin;
         bullet.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
                 bulletHeight, worldBounds, bulletDamage);
     }

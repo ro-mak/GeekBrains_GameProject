@@ -1,7 +1,6 @@
 package ru.makproductions.geekbrains.gameproject.screens;
 
 import ru.makproductions.geekbrains.gameproject.engine.pool.SpritesPool;
-import ru.makproductions.geekbrains.gameproject.screens.Bullet;
 
 
 public class BulletPool extends SpritesPool<Bullet> {

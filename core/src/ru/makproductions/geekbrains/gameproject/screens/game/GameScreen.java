@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.makproductions.geekbrains.gameproject.screens.BulletPool;
@@ -13,6 +14,9 @@ import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
 import ru.makproductions.geekbrains.gameproject.screens.Background;
+import ru.makproductions.geekbrains.gameproject.screens.EnemyBulletPool;
+import ru.makproductions.geekbrains.gameproject.screens.EnemyFabric;
+import ru.makproductions.geekbrains.gameproject.screens.EnemyPool;
 import ru.makproductions.geekbrains.gameproject.screens.Explosion;
 import ru.makproductions.geekbrains.gameproject.screens.ExplosionPool;
 import ru.makproductions.geekbrains.gameproject.screens.stars.StarsOfGame;
@@ -23,7 +27,11 @@ public class GameScreen extends Base2DScreen {
         super(game);
     }
 
+    private EnemyPool enemyPool;
+    private EnemyFabric enemyFabric;
+    private TextureRegion[] enemyTextures = new TextureRegion[3];
     private final BulletPool bulletPool = new BulletPool();
+    private final EnemyBulletPool enemyBulletPool = new EnemyBulletPool();
     private ExplosionPool explosionPool;
     private Sound soundExplosion;
     private TextureAtlas atlas;
@@ -32,24 +40,29 @@ public class GameScreen extends Base2DScreen {
     private StarsOfGame[] stars;
     private final int STARS_COUNT = 250;
     private final float STARS_HEIGHT = 0.05f;
-    private PlayerShip ship;
+    private PlayerShip playerShip;
     private final float SHIP_HEIGHT = 0.2f;
 
     @Override
     public void show() {
         super.show();
         atlas = new TextureAtlas("textures/mainAtlas.pack");
+        enemyTextures[0] = atlas.findRegion("Enemy");
+        enemyTextures[1] = atlas.findRegion("EnemyEngineFire");
+        enemyTextures[2] = atlas.findRegion("EnemyBullet");
         soundExplosion = Gdx.audio.newSound(Gdx.files.internal("music/Explosion.wav"));
         explosionPool = new ExplosionPool(atlas,soundExplosion);
+        enemyPool = new EnemyPool();
+        enemyFabric = new EnemyFabric(enemyPool);
         background = new Background(atlas.findRegion("Galaxies"));
         stars = new StarsOfGame[STARS_COUNT];
-        ship = new PlayerShip(atlas,0,0,SHIP_HEIGHT,new Vector2(0f,0f),bulletPool);
-        ship.setEngineStarted(true);
+        playerShip = new PlayerShip(atlas,0,0,SHIP_HEIGHT,new Vector2(0f,0f),bulletPool);
+        playerShip.setEngineStarted(true);
         for (int i = 0; i < stars.length; i++) {
             float starHeight = STARS_HEIGHT * Rnd.nextFloat(0.3f,0.8f);
             float vx = Rnd.nextFloat(-0.0008f,0.0008f);
             float vy = Rnd.nextFloat(-0.0001f,-0.02f);
-            stars[i] = new StarsOfGame(atlas.findRegion("Star"),ship,vx,vy,starHeight);
+            stars[i] = new StarsOfGame(atlas.findRegion("Star"), playerShip,vx,vy,starHeight);
         }
         playMusic();
     }
@@ -57,10 +70,11 @@ public class GameScreen extends Base2DScreen {
     @Override
     protected void resize(Rect worldBounds) {
         background.resize(worldBounds);
-        ship.resize(worldBounds);
+        playerShip.resize(worldBounds);
         for (int i = 0; i < stars.length; i++) {
             stars[i].resize(worldBounds);
         }
+        enemyPool.resizeActiveSprites(worldBounds);
     }
 
     private void playMusic(){
@@ -83,22 +97,27 @@ public class GameScreen extends Base2DScreen {
             timer = 0;
             Explosion explosion = explosionPool.obtain();
             explosion.setExplosion(0.1f, new Vector2(0f, 0f));
+            enemyFabric.createEnemy(enemyTextures,enemyBulletPool, playerShip);
         }
         background.update(delta);
         for (int i = 0; i < stars.length; i++) {
             stars[i].update(delta);
         }
         bulletPool.updateActiveSprites(delta);
+        enemyBulletPool.updateActiveSprites(delta);
         explosionPool.updateActiveSprites(delta);
-        ship.update(delta);
+        enemyPool.updateActiveSprites(delta);
+        playerShip.update(delta);
     }
     private void checkCollisions(){
 
     }
 
     private void deleteAllDestroyed(){
+        enemyBulletPool.freeAllDestroyedActiveObjects();
         bulletPool.freeAllDestroyedActiveObjects();
         explosionPool.freeAllDestroyedActiveObjects();
+        enemyPool.freeAllDestroyedActiveObjects();
     }
 
     private void draw(){
@@ -110,8 +129,10 @@ public class GameScreen extends Base2DScreen {
             stars[i].draw(batch);
         }
         bulletPool.drawActiveObjects(batch);
+        enemyBulletPool.drawActiveObjects(batch);
         explosionPool.drawActiveObjects(batch);
-        ship.draw(batch);
+        enemyPool.drawActiveObjects(batch);
+        playerShip.draw(batch);
         batch.end();
     }
 
@@ -121,34 +142,36 @@ public class GameScreen extends Base2DScreen {
         music_level1.dispose();
         soundExplosion.dispose();
         bulletPool.dispose();
+        enemyBulletPool.dispose();
         explosionPool.dispose();
+        enemyPool.dispose();
         super.dispose();
     }
 
     @Override
     protected void touchDown(Vector2 touch, int pointer) {
-        ship.touchDown(touch,pointer);
+        playerShip.touchDown(touch,pointer);
     }
 
     @Override
     protected void touchUp(Vector2 touch, int pointer) {
-        ship.touchUp(touch,pointer);
+        playerShip.touchUp(touch,pointer);
     }
 
     @Override
     protected void touchMove(Vector2 touch, int pointer) {
-        ship.touchMove(touch,pointer);
+        playerShip.touchMove(touch,pointer);
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        ship.keyDown(keycode);
+        playerShip.keyDown(keycode);
         return super.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        ship.keyUp(keycode);
+        playerShip.keyUp(keycode);
         return super.keyUp(keycode);
     }
 

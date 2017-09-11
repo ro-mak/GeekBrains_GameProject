@@ -24,8 +24,6 @@ public class PlayerShip extends Ship {
     }
 
     private final float BOTTOM_MARGIN = 0.1f;
-    private boolean touched;
-    private int sideTouched;
     private Vector2 speed = new Vector2();
 
     @Override
@@ -80,11 +78,11 @@ public class PlayerShip extends Ship {
         if (touch.x < worldBounds.position.x) {
             if (leftPointer != INVALID_POINTER) return false;
             leftPointer = pointer;
-            sideTouched = -1;
+            moveLeft();
         } else if (touch.x > worldBounds.position.x) {
             if (rightPointer != INVALID_POINTER) return false;
             rightPointer = pointer;
-            sideTouched = 1;
+            moveRight();
         }
         return super.touchDown(touch, pointer);
     }
@@ -92,12 +90,12 @@ public class PlayerShip extends Ship {
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
         if (pointer == leftPointer) {
-            sideTouched = 0;
+
             leftPointer = INVALID_POINTER;
             if (rightPointer != INVALID_POINTER) moveRight();
             else stop();
         } else if (pointer == rightPointer) {
-            sideTouched = 0;
+
             rightPointer = INVALID_POINTER;
             if (leftPointer != INVALID_POINTER) moveLeft();
             else stop();
@@ -146,10 +144,6 @@ public class PlayerShip extends Ship {
         }
     }
 
-    private int sideOfTheScreen() {
-        return sideTouched;
-    }
-
     @Override
     public void update(float delta) {
         if (getLeft() < worldBounds.getLeft()) {
@@ -159,12 +153,7 @@ public class PlayerShip extends Ship {
             setRight(worldBounds.getRight());
             stop();
         }
-        int side = sideOfTheScreen();
-        if (side == -1) {
-            moveLeft();
-        } else if (side == 1) {
-            moveRight();
-        }
+
         position.mulAdd(speed, delta);
         reloadTimer  += delta;
         if(reloadTimer >= reloadInterval){
