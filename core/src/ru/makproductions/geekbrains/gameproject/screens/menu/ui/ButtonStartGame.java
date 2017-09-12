@@ -1,4 +1,4 @@
-package ru.makproductions.geekbrains.gameproject.screens.menu;
+package ru.makproductions.geekbrains.gameproject.screens.menu.ui;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 

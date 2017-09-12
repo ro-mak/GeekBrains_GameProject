@@ -1,11 +1,12 @@
-package ru.makproductions.geekbrains.gameproject.screens;
+package ru.makproductions.geekbrains.gameproject.common.enemy;
 
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
-import ru.makproductions.geekbrains.gameproject.screens.game.PlayerShip;
+import ru.makproductions.geekbrains.gameproject.common.Bullet;
+import ru.makproductions.geekbrains.gameproject.common.player.PlayerShip;
 
 public class EnemyBullet extends Bullet {
     private PlayerShip playerShip;

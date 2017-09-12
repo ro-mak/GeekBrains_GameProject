@@ -1,4 +1,4 @@
-package ru.makproductions.geekbrains.gameproject.screens;
+package ru.makproductions.geekbrains.gameproject.common.enemy;
 
 
 import ru.makproductions.geekbrains.gameproject.engine.pool.SpritesPool;

@@ -1,4 +1,4 @@
-package ru.makproductions.geekbrains.gameproject.screens;
+package ru.makproductions.geekbrains.gameproject.common;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 

@@ -1,4 +1,4 @@
-package ru.makproductions.geekbrains.gameproject.screens.stars;
+package ru.makproductions.geekbrains.gameproject.common.stars;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;

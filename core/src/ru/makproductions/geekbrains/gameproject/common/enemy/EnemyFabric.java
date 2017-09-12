@@ -1,9 +1,10 @@
-package ru.makproductions.geekbrains.gameproject.screens;
+package ru.makproductions.geekbrains.gameproject.common.enemy;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import ru.makproductions.geekbrains.gameproject.common.explosions.ExplosionPool;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
-import ru.makproductions.geekbrains.gameproject.screens.game.PlayerShip;
+import ru.makproductions.geekbrains.gameproject.common.player.PlayerShip;
 
 public class EnemyFabric {
     private EnemyPool enemyPool;
@@ -13,11 +14,11 @@ public class EnemyFabric {
         this.enemyPool = enemyPool;
     }
 
-    public void createEnemy(TextureRegion[] enemyTexture, EnemyBulletPool bulletPool, PlayerShip playerShip) {
-        float vy = Rnd.nextFloat(-0.1f, -0.3f);
+    public void createEnemy(TextureRegion[] enemyTexture, EnemyBulletPool bulletPool, PlayerShip playerShip, ExplosionPool explosionPool) {
+        float vy = Rnd.nextFloat(-0.1f, -0.15f);
         float height = Rnd.nextFloat(0.05f, 0.1f);
         enemy = enemyPool.obtain();
         if (enemy == null) throw new RuntimeException("trying to invoke method setEnemy to null");
-        enemy.setEnemy(enemyTexture, 0f, vy, height, bulletPool, enemyPool.getWorldBounds(),playerShip);
+        enemy.setEnemy(enemyTexture, 0f, vy, height, bulletPool, enemyPool.getWorldBounds(),playerShip,explosionPool);
     }
 }

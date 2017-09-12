@@ -30,11 +30,13 @@ public class Sprite extends Rect {
             }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(regions[currentFrame],
-                getLeft(),getBottom(),
-                halfWidth,halfHeight,
-                getWidth(),getHeight(),
-                scale,scale,angle);
+        if(!isDestroyed()) {
+            batch.draw(regions[currentFrame],
+                    getLeft(), getBottom(),
+                    halfWidth, halfHeight,
+                    getWidth(), getHeight(),
+                    scale, scale, angle);
+        }
     }
 
     public void setWidthProportion(float width){

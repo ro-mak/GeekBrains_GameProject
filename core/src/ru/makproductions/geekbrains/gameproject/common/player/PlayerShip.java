@@ -1,15 +1,18 @@
-package ru.makproductions.geekbrains.gameproject.screens.game;
+package ru.makproductions.geekbrains.gameproject.common.player;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
-import ru.makproductions.geekbrains.gameproject.screens.BulletPool;
+import ru.makproductions.geekbrains.gameproject.common.BulletPool;
+import ru.makproductions.geekbrains.gameproject.common.Collidable;
+import ru.makproductions.geekbrains.gameproject.common.enemy.Enemy;
+import ru.makproductions.geekbrains.gameproject.common.explosions.ExplosionPool;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
 import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
-import ru.makproductions.geekbrains.gameproject.screens.Ship;
+import ru.makproductions.geekbrains.gameproject.common.Ship;
 
 
 public class PlayerShip extends Ship {
@@ -33,9 +36,10 @@ public class PlayerShip extends Ship {
     }
 
     public PlayerShip(TextureAtlas atlas, float vx, float vy, float height,
-                      Vector2 position, BulletPool bulletPool) {
+                      Vector2 position, BulletPool bulletPool, ExplosionPool explosionPool) {
         super(atlas.findRegion("Ship"), vx, vy, height, position);
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         fireTexture = atlas.findRegion("Fire");
         bulletSpeed.set(0f,0.5f);
         bulletDamage = 1;
@@ -90,7 +94,6 @@ public class PlayerShip extends Ship {
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
         if (pointer == leftPointer) {
-
             leftPointer = INVALID_POINTER;
             if (rightPointer != INVALID_POINTER) moveRight();
             else stop();
@@ -112,7 +115,7 @@ public class PlayerShip extends Ship {
     private boolean pressedRight;
 
 
-    void keyDown(int keycode) {
+    public void keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.A:
             case Input.Keys.LEFT:
@@ -127,7 +130,7 @@ public class PlayerShip extends Ship {
         }
     }
 
-    void keyUp(int keycode) {
+    public void keyUp(int keycode) {
         switch (keycode) {
             case Input.Keys.A:
             case Input.Keys.LEFT:
@@ -153,12 +156,18 @@ public class PlayerShip extends Ship {
             setRight(worldBounds.getRight());
             stop();
         }
-
         position.mulAdd(speed, delta);
         reloadTimer  += delta;
         if(reloadTimer >= reloadInterval){
             reloadTimer = 0f;
             shoot();
+        }
+    }
+
+    @Override
+    public void solveCollision(Collidable collidable2) {
+        if(collidable2 instanceof Enemy){
+            destroy();
         }
     }
 }

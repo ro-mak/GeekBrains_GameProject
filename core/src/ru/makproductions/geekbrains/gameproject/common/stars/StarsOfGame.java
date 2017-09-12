@@ -1,4 +1,4 @@
-package ru.makproductions.geekbrains.gameproject.screens.stars;
+package ru.makproductions.geekbrains.gameproject.common.stars;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
 import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
-import ru.makproductions.geekbrains.gameproject.screens.game.PlayerShip;
+import ru.makproductions.geekbrains.gameproject.common.player.PlayerShip;
 
 public class StarsOfGame extends Sprite {
 

@@ -1,12 +1,15 @@
-package ru.makproductions.geekbrains.gameproject.screens;
+package ru.makproductions.geekbrains.gameproject.common.enemy;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import ru.makproductions.geekbrains.gameproject.common.Collidable;
+import ru.makproductions.geekbrains.gameproject.common.Ship;
+import ru.makproductions.geekbrains.gameproject.common.explosions.ExplosionPool;
+import ru.makproductions.geekbrains.gameproject.common.player.PlayerShip;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
 import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
-import ru.makproductions.geekbrains.gameproject.screens.game.PlayerShip;
 
 public class Enemy extends Ship {
 
@@ -16,7 +19,9 @@ public class Enemy extends Ship {
     public Enemy() {
     }
 
-    public void setEnemy(TextureRegion[] enemyTexture, float vx, float vy, float height, EnemyBulletPool bulletPool, Rect worldBounds, PlayerShip playerShip) {
+    public void setEnemy(TextureRegion[] enemyTexture, float vx, float vy, float height,
+                         EnemyBulletPool bulletPool, Rect worldBounds,
+                         PlayerShip playerShip, ExplosionPool explosionPool) {
         regions = enemyTexture;
         fireTexture = enemyTexture[1];
         bulletTexture = enemyTexture[2];
@@ -25,17 +30,18 @@ public class Enemy extends Ship {
         this.worldBounds = worldBounds;
         this.height = height;
         setHeightProportion(height);
-        speed0.set(vx, vy);
+        speed0.set(vx, vy / (height * 10));
         float positionX = Rnd.nextFloat(worldBounds.getLeft() + halfWidth, worldBounds.getRight() - halfWidth);
         position.set(positionX, worldBounds.getTop());
         setEngineStarted(true);
 
         bulletHeight = getHalfHeight();
         bullet_margin = -(getHalfHeight());
-        bulletSpeed.set(0f, -0.5f);
-        bulletDamage = 1;
-        reloadInterval = 0.75f;
+        bulletSpeed.set(0f, -0.05f / height);
+        bulletDamage = (int) height * 10;
+        reloadInterval = height * 30;
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
     }
 
     @Override
@@ -44,13 +50,13 @@ public class Enemy extends Ship {
         bulletPosition.x = getLeft() + getHalfWidth() / 2;
         bulletPosition.y = position.y + bullet_margin;
         bullet1.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
-                bulletHeight, worldBounds, bulletDamage,playerShip);
+                bulletHeight, worldBounds, bulletDamage, playerShip);
 
         EnemyBullet bullet2 = bulletPool.obtain();
         bulletPosition.x = getRight() - getHalfWidth() / 2;
         bulletPosition.y = position.y + bullet_margin;
         bullet2.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
-                bulletHeight, worldBounds, bulletDamage,playerShip);
+                bulletHeight, worldBounds, bulletDamage, playerShip);
     }
 
     @Override
@@ -63,16 +69,26 @@ public class Enemy extends Ship {
     }
 
     @Override
+    public void solveCollision(Collidable collidable2) {
+        if(collidable2 instanceof PlayerShip){
+            destroy();
+        }
+    }
+
+    @Override
     public void update(float deltaTime) {
         position.mulAdd(speed0, deltaTime);
-        if (this.isOutSide(worldBounds)) destroy();
+
+        if (this.getBottom() <= worldBounds.getBottom()) {
+            destroy();
+        }
         reloadTimer += deltaTime;
         if (reloadTimer >= reloadInterval) {
             reloadTimer = 0f;
             shoot();
         }
         if (playerShip.isMoving()) {
-            position.x -= playerShip.getSpeed().x/1000;
+            position.x -= playerShip.getSpeed().x / 1000;
         }
     }
 

@@ -1,4 +1,4 @@
-package ru.makproductions.geekbrains.gameproject.screens;
+package ru.makproductions.geekbrains.gameproject.common.explosions;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,9 +21,7 @@ public class Explosion extends Sprite {
         currentFrame = 0;
         this.position.set(position);
         setHeightProportion(height);
-        long id;
-        if((id = soundExplosion.play()) == -1) throw new RuntimeException("soundExplosion.play() == -1");
-        soundExplosion.setVolume(id,0.1f);
+        if((soundExplosion.play(0.1f)) == -1) throw new RuntimeException("soundExplosion.play() == -1");
     }
 
     @Override

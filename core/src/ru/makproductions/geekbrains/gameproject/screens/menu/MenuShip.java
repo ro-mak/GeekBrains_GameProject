@@ -3,11 +3,10 @@ package ru.makproductions.geekbrains.gameproject.screens.menu;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
 import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
-import ru.makproductions.geekbrains.gameproject.screens.Ship;
+import ru.makproductions.geekbrains.gameproject.common.Ship;
 
 public class MenuShip extends Ship {
 

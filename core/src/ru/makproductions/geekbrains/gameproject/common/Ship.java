@@ -1,16 +1,18 @@
-package ru.makproductions.geekbrains.gameproject.screens;
+package ru.makproductions.geekbrains.gameproject.common;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.makproductions.geekbrains.gameproject.common.explosions.Explosion;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
 
 
-public class Ship extends Sprite {
+public class Ship extends Sprite implements Collidable {
 
+    protected ru.makproductions.geekbrains.gameproject.common.explosions.ExplosionPool explosionPool;
     protected BulletPool bulletPool;
     protected TextureRegion bulletTexture;
     protected Sound bulletSound;
@@ -54,11 +56,13 @@ public class Ship extends Sprite {
     protected float bullet_margin = 0.1f;
 
     protected void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bulletPosition.x = position.x;
-        bulletPosition.y = position.y + bullet_margin;
-        bullet.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
-                bulletHeight, worldBounds, bulletDamage);
+        if(!isDestroyed()) {
+            Bullet bullet = bulletPool.obtain();
+            bulletPosition.x = position.x;
+            bulletPosition.y = position.y + bullet_margin;
+            bullet.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
+                    bulletHeight, worldBounds, bulletDamage);
+        }
     }
 
     public void setEngineStarted(boolean engineStarted) {
@@ -66,8 +70,17 @@ public class Ship extends Sprite {
     }
 
     public void draw(SpriteBatch batch) {
-        if (engineStarted) startEngine(batch);
-        super.draw(batch);
+            if (engineStarted) startEngine(batch);
+            super.draw(batch);
+    }
+
+    @Override
+    public void destroy() {
+        setEngineStarted(false);
+        super.destroy();
+        Explosion explosion = explosionPool.obtain();
+        explosion.setExplosion(this.height, this.position);
+        speed0.setZero();
     }
 
     protected void startEngine(SpriteBatch batch) {
@@ -75,5 +88,9 @@ public class Ship extends Sprite {
 
     public void update(float delta) {
 
+    }
+
+    @Override
+    public void solveCollision(Collidable collidable2) {
     }
 }
