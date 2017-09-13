@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
 
-public class Bullet extends Sprite {
+public class Bullet extends Sprite implements Collidable {
 
     protected Rect worldBounds;
     protected final Vector2 speed = new Vector2();
@@ -52,5 +52,10 @@ public class Bullet extends Sprite {
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
+    }
+
+    @Override
+    public void solveCollision(Collidable collidable2) {
+        if(!(collidable2 instanceof Bullet)&& collidable2!=owner )destroy();
     }
 }

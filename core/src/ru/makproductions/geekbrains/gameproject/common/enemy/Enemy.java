@@ -3,6 +3,7 @@ package ru.makproductions.geekbrains.gameproject.common.enemy;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import ru.makproductions.geekbrains.gameproject.common.Bullet;
 import ru.makproductions.geekbrains.gameproject.common.Collidable;
 import ru.makproductions.geekbrains.gameproject.common.Ship;
 import ru.makproductions.geekbrains.gameproject.common.explosions.ExplosionPool;
@@ -35,10 +36,11 @@ public class Enemy extends Ship {
         position.set(positionX, worldBounds.getTop());
         setEngineStarted(true);
 
+        hp = (int)(100/height);
         bulletHeight = getHalfHeight();
         bullet_margin = -(getHalfHeight());
         bulletSpeed.set(0f, -0.05f / height);
-        bulletDamage = (int) height * 10;
+        bulletDamage = (int) (10/height);
         reloadInterval = height * 30;
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
@@ -73,22 +75,31 @@ public class Enemy extends Ship {
         if(collidable2 instanceof PlayerShip){
             destroy();
         }
+        if (collidable2 instanceof Bullet){
+            Bullet bullet = (Bullet) collidable2;
+            if(bullet.getOwner() instanceof PlayerShip) {
+                hp -= bullet.getDamage();
+            }
+        }
     }
 
     @Override
     public void update(float deltaTime) {
-        position.mulAdd(speed0, deltaTime);
-
+        if(hp <=0)destroy();
         if (this.getBottom() <= worldBounds.getBottom()) {
+            playerShip.setHp(playerShip.getHp()-bulletDamage);
             destroy();
         }
+
+        position.mulAdd(speed0, deltaTime);
+        if (playerShip.isMoving()) {
+            position.x -= playerShip.getSpeed().x / 1000;
+        }
+
         reloadTimer += deltaTime;
         if (reloadTimer >= reloadInterval) {
             reloadTimer = 0f;
             shoot();
-        }
-        if (playerShip.isMoving()) {
-            position.x -= playerShip.getSpeed().x / 1000;
         }
     }
 

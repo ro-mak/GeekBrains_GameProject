@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.makproductions.geekbrains.gameproject.common.Bullet;
 import ru.makproductions.geekbrains.gameproject.common.BulletPool;
 import ru.makproductions.geekbrains.gameproject.common.Collidable;
 import ru.makproductions.geekbrains.gameproject.common.enemy.Enemy;
@@ -42,10 +43,11 @@ public class PlayerShip extends Ship {
         this.explosionPool = explosionPool;
         fireTexture = atlas.findRegion("Fire");
         bulletSpeed.set(0f,0.5f);
-        bulletDamage = 1;
+        bulletDamage = 500;
         bulletTexture = atlas.findRegion("PlayerBullet");
         bulletHeight = 0.05f;
         reloadInterval = 0.25f;
+        hp = 5000;
     }
 
     @Override
@@ -146,9 +148,12 @@ public class PlayerShip extends Ship {
                 break;
         }
     }
-
+    private int previousHp;
     @Override
     public void update(float delta) {
+        if(previousHp!=hp)System.out.println("Player hp left:" + hp);
+        previousHp = hp;
+        if(hp <= 0 && !isDestroyed()) destroy();
         if (getLeft() < worldBounds.getLeft()) {
             setLeft(worldBounds.getLeft());
             stop();
@@ -168,6 +173,12 @@ public class PlayerShip extends Ship {
     public void solveCollision(Collidable collidable2) {
         if(collidable2 instanceof Enemy){
             destroy();
+        }else if(collidable2 instanceof Bullet){
+            Bullet bullet = (Bullet) collidable2;
+            if(bullet.getOwner()!=this) {
+                hp -= bullet.getDamage();
+            }
         }
+
     }
 }

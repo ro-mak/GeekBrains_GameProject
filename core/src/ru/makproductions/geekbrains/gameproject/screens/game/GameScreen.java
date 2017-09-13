@@ -9,18 +9,17 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.makproductions.geekbrains.gameproject.common.Background;
 import ru.makproductions.geekbrains.gameproject.common.BulletPool;
 import ru.makproductions.geekbrains.gameproject.common.CollisionDetector;
-import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
-import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
-import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
-import ru.makproductions.geekbrains.gameproject.common.Background;
 import ru.makproductions.geekbrains.gameproject.common.enemy.EnemyBulletPool;
 import ru.makproductions.geekbrains.gameproject.common.enemy.EnemyFabric;
 import ru.makproductions.geekbrains.gameproject.common.enemy.EnemyPool;
-import ru.makproductions.geekbrains.gameproject.common.explosions.Explosion;
 import ru.makproductions.geekbrains.gameproject.common.explosions.ExplosionPool;
 import ru.makproductions.geekbrains.gameproject.common.stars.StarsOfGame;
+import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
+import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
+import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
 
 
 public class GameScreen extends Base2DScreen {
@@ -116,6 +115,8 @@ public class GameScreen extends Base2DScreen {
         collisionDetector.detectCollisions();
         collisionDetector.addActiveObjects(playerShip);
         collisionDetector.addActiveObjects(enemyPool.getActiveObjects());
+        collisionDetector.addActiveObjects(bulletPool.getActiveObjects());
+        collisionDetector.addActiveObjects(enemyBulletPool.getActiveObjects());
     }
 
     private void deleteAllDestroyed(){
