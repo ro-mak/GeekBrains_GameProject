@@ -11,9 +11,10 @@ import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
 import ru.makproductions.geekbrains.gameproject.engine.buttons.ActionListener;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
-import ru.makproductions.geekbrains.gameproject.screens.game.GameScreen;
 import ru.makproductions.geekbrains.gameproject.common.stars.StarsOfMenu;
 import ru.makproductions.geekbrains.gameproject.common.Background;
+import ru.makproductions.geekbrains.gameproject.screens.game.GameScreen;
+import ru.makproductions.geekbrains.gameproject.screens.menu.ui.ButtonExit;
 import ru.makproductions.geekbrains.gameproject.screens.menu.ui.ButtonStartGame;
 
 public class MenuScreen extends Base2DScreen implements ActionListener {
@@ -30,10 +31,10 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     private MenuShip ship;
     private final float SHIP_HEIGHT = 0.4f;
 
-    private ru.makproductions.geekbrains.gameproject.screens.menu.ui.ButtonStartGame startButton;
+    private ButtonStartGame startButton;
     private final float BUTTON_START_HEIGHT = 0.2f;
 
-    private ru.makproductions.geekbrains.gameproject.screens.menu.ui.ButtonExit exitButton;
+    private ButtonExit exitButton;
     private final float BUTTON_EXIT_HEIGHT = 0.2f;
 
     private Music music_level1;
@@ -58,7 +59,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
                     , vx, vy, starHeight);
         }
         startButton = new ButtonStartGame(atlas,BUTTON_START_HEIGHT,this);
-        exitButton = new ru.makproductions.geekbrains.gameproject.screens.menu.ui.ButtonExit(atlas,BUTTON_EXIT_HEIGHT,this);
+        exitButton = new ButtonExit(atlas,BUTTON_EXIT_HEIGHT,this);
         ship = new MenuShip(atlas,0,0,SHIP_HEIGHT,new Vector2(0f,-0.2f));
         playMusic();
     }

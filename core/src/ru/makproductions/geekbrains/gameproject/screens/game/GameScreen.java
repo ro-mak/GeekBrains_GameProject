@@ -16,6 +16,7 @@ import ru.makproductions.geekbrains.gameproject.common.enemy.EnemyBulletPool;
 import ru.makproductions.geekbrains.gameproject.common.enemy.EnemyFabric;
 import ru.makproductions.geekbrains.gameproject.common.enemy.EnemyPool;
 import ru.makproductions.geekbrains.gameproject.common.explosions.ExplosionPool;
+import ru.makproductions.geekbrains.gameproject.common.player.PlayerShip;
 import ru.makproductions.geekbrains.gameproject.common.stars.StarsOfGame;
 import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
@@ -35,13 +36,15 @@ public class GameScreen extends Base2DScreen {
     private final EnemyBulletPool enemyBulletPool = new EnemyBulletPool();
     private ExplosionPool explosionPool;
     private Sound soundExplosion;
+    private Sound playerShotSound;
+    private Sound enemyShotSound;
     private TextureAtlas atlas;
     private Background background;
     private Music music_level1;
     private StarsOfGame[] stars;
-    private final int STARS_COUNT = 250;
+    private final int STARS_COUNT = 150;
     private final float STARS_HEIGHT = 0.05f;
-    private ru.makproductions.geekbrains.gameproject.common.player.PlayerShip playerShip;
+    private PlayerShip playerShip;
     private final float SHIP_HEIGHT = 0.2f;
 
     @Override
@@ -51,15 +54,17 @@ public class GameScreen extends Base2DScreen {
         enemyTextures[0] = atlas.findRegion("Enemy");
         enemyTextures[1] = atlas.findRegion("EnemyEngineFire");
         enemyTextures[2] = atlas.findRegion("EnemyBullet");
-        soundExplosion = Gdx.audio.newSound(Gdx.files.internal("music/Explosion.wav"));
+        soundExplosion = Gdx.audio.newSound(Gdx.files.internal("sounds/Explosion.wav"));
+        playerShotSound = Gdx.audio.newSound(Gdx.files.internal("sounds/PlayerShot.wav"));
+        enemyShotSound = Gdx.audio.newSound(Gdx.files.internal("sounds/EnemyShot.wav"));
         explosionPool = new ExplosionPool(atlas,soundExplosion);
         enemyPool = new EnemyPool();
         enemyFabric = new EnemyFabric(enemyPool);
         background = new Background(atlas.findRegion("Galaxies"));
         stars = new StarsOfGame[STARS_COUNT];
         playerShip =
-                new ru.makproductions.geekbrains.gameproject.common.player.PlayerShip
-                        (atlas,0,0,SHIP_HEIGHT,new Vector2(0f,0f),bulletPool,explosionPool);
+                new PlayerShip
+                        (atlas,0,0,SHIP_HEIGHT,new Vector2(0f,0f),bulletPool,explosionPool,playerShotSound);
         playerShip.setEngineStarted(true);
         for (int i = 0; i < stars.length; i++) {
             float starHeight = STARS_HEIGHT * Rnd.nextFloat(0.3f,0.8f);
@@ -99,7 +104,7 @@ public class GameScreen extends Base2DScreen {
     private void update(float delta){
         if((timer+=delta) >= 3) {
             timer = 0;
-            enemyFabric.createEnemy(enemyTextures,enemyBulletPool, playerShip,explosionPool);
+            enemyFabric.createEnemy(enemyTextures,enemyBulletPool, playerShip,explosionPool,enemyShotSound);
         }
         background.update(delta);
         for (int i = 0; i < stars.length; i++) {
@@ -148,6 +153,8 @@ public class GameScreen extends Base2DScreen {
         atlas.dispose();
         music_level1.dispose();
         soundExplosion.dispose();
+        playerShotSound.dispose();
+        enemyShotSound.dispose();
         bulletPool.dispose();
         enemyBulletPool.dispose();
         explosionPool.dispose();

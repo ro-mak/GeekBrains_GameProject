@@ -6,13 +6,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.makproductions.geekbrains.gameproject.common.explosions.Explosion;
+import ru.makproductions.geekbrains.gameproject.common.explosions.ExplosionPool;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
 
 
 public class Ship extends Sprite implements Collidable {
 
-    protected ru.makproductions.geekbrains.gameproject.common.explosions.ExplosionPool explosionPool;
+    protected ExplosionPool explosionPool;
     protected BulletPool bulletPool;
     protected TextureRegion bulletTexture;
     protected Sound bulletSound;
@@ -26,6 +27,7 @@ public class Ship extends Sprite implements Collidable {
     protected boolean engineStarted;
     protected float acceleration;
     protected float height;
+    protected Sound shotSound;
 
     public Vector2 getSpeed0() {
         return this.speed0;
@@ -34,8 +36,9 @@ public class Ship extends Sprite implements Collidable {
     public Ship(){}
 
     public Ship(TextureRegion shipTexture, float vx, float vy, float height,
-                Vector2 position) {
+                Vector2 position, Sound shotSound) {
         super(shipTexture);
+        this.shotSound = shotSound;
         this.height = height;
         this.position.set(position);
         speed0.set(vx, vy);
@@ -62,6 +65,7 @@ public class Ship extends Sprite implements Collidable {
             bulletPosition.y = position.y + bullet_margin;
             bullet.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
                     bulletHeight, worldBounds, bulletDamage);
+            if(shotSound.play(0.1f)==-1)throw new RuntimeException("shotSound.play() == -1");
         }
     }
 

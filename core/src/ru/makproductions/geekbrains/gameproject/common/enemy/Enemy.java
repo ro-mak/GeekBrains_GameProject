@@ -1,5 +1,6 @@
 package ru.makproductions.geekbrains.gameproject.common.enemy;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -22,7 +23,8 @@ public class Enemy extends Ship {
 
     public void setEnemy(TextureRegion[] enemyTexture, float vx, float vy, float height,
                          EnemyBulletPool bulletPool, Rect worldBounds,
-                         PlayerShip playerShip, ExplosionPool explosionPool) {
+                         PlayerShip playerShip, ExplosionPool explosionPool,Sound shotSound) {
+        this.shotSound = shotSound;
         regions = enemyTexture;
         fireTexture = enemyTexture[1];
         bulletTexture = enemyTexture[2];
@@ -53,12 +55,13 @@ public class Enemy extends Ship {
         bulletPosition.y = position.y + bullet_margin;
         bullet1.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
                 bulletHeight, worldBounds, bulletDamage, playerShip);
-
+        if(shotSound.play(0.3f)==-1)throw new RuntimeException("shotSound.play()==-1");
         EnemyBullet bullet2 = bulletPool.obtain();
         bulletPosition.x = getRight() - getHalfWidth() / 2;
         bulletPosition.y = position.y + bullet_margin;
         bullet2.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
                 bulletHeight, worldBounds, bulletDamage, playerShip);
+        if(shotSound.play(0.3f)==-1)throw new RuntimeException("shotSound.play()==-1");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ru.makproductions.geekbrains.gameproject.common.player;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -37,8 +38,8 @@ public class PlayerShip extends Ship {
     }
 
     public PlayerShip(TextureAtlas atlas, float vx, float vy, float height,
-                      Vector2 position, BulletPool bulletPool, ExplosionPool explosionPool) {
-        super(atlas.findRegion("Ship"), vx, vy, height, position);
+                      Vector2 position, BulletPool bulletPool, ExplosionPool explosionPool,Sound shotSound) {
+        super(atlas.findRegion("Ship"), vx, vy, height, position,shotSound);
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
         fireTexture = atlas.findRegion("Fire");
