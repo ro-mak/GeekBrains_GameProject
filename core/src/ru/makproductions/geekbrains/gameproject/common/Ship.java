@@ -65,7 +65,8 @@ public class Ship extends Sprite implements Collidable {
             bulletPosition.y = position.y + bullet_margin;
             bullet.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
                     bulletHeight, worldBounds, bulletDamage);
-            if(shotSound.play(0.1f)==-1)throw new RuntimeException("shotSound.play() == -1");
+            shotSound.play(0.1f);
+            //if(shotSound.play(0.1f)==-1)throw new RuntimeException("shotSound.play() == -1");
         }
     }
 

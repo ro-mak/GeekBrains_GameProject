@@ -2,6 +2,7 @@ package ru.makproductions.geekbrains.gameproject.screens.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -46,17 +47,23 @@ public class GameScreen extends Base2DScreen {
     private final float STARS_HEIGHT = 0.05f;
     private PlayerShip playerShip;
     private final float SHIP_HEIGHT = 0.2f;
-
+    private AssetManager assetManager;
     @Override
     public void show() {
         super.show();
-        atlas = new TextureAtlas("textures/mainAtlas.pack");
+        assetManager = new AssetManager();
+        assetManager.load("textures/mainAtlas.pack",TextureAtlas.class);
+            assetManager.load("sounds/Explosion.wav",Sound.class);
+            assetManager.load("sounds/PlayerShot.wav",Sound.class);
+            assetManager.load("sounds/EnemyShot.wav",Sound.class);
+        assetManager.finishLoading();
+        atlas = assetManager.get("textures/mainAtlas.pack",TextureAtlas.class);
         enemyTextures[0] = atlas.findRegion("Enemy");
         enemyTextures[1] = atlas.findRegion("EnemyEngineFire");
         enemyTextures[2] = atlas.findRegion("EnemyBullet");
-        soundExplosion = Gdx.audio.newSound(Gdx.files.internal("sounds/Explosion.wav"));
-        playerShotSound = Gdx.audio.newSound(Gdx.files.internal("sounds/PlayerShot.wav"));
-        enemyShotSound = Gdx.audio.newSound(Gdx.files.internal("sounds/EnemyShot.wav"));
+        soundExplosion = assetManager.get("sounds/Explosion.wav",Sound.class);
+        playerShotSound = assetManager.get("sounds/PlayerShot.wav",Sound.class);
+        enemyShotSound = assetManager.get("sounds/EnemyShot.wav",Sound.class);
         explosionPool = new ExplosionPool(atlas,soundExplosion);
         enemyPool = new EnemyPool();
         enemyFabric = new EnemyFabric(enemyPool);
@@ -74,6 +81,7 @@ public class GameScreen extends Base2DScreen {
         }
         collisionDetector = new CollisionDetector();
         playMusic();
+
     }
 
     @Override
@@ -159,6 +167,7 @@ public class GameScreen extends Base2DScreen {
         enemyBulletPool.dispose();
         explosionPool.dispose();
         enemyPool.dispose();
+        assetManager.dispose();
         super.dispose();
     }
 
