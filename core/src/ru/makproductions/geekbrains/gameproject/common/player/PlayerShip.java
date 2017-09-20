@@ -52,11 +52,11 @@ public class PlayerShip extends Ship {
         regions[1] = atlas.findRegion("PlayerShipFullVersion2Damage1");
         regions[2] = atlas.findRegion("PlayerShipFullVersion2Damage2");
         regions[3] = atlas.findRegion("PlayerShipFullVersion2Damage3");
+        fire = new Sprite(fireTexture);
     }
 
     @Override
     protected void startEngine(SpriteBatch batch) {
-        fire = new Sprite(fireTexture);
         fire.position.y = this.getBottom() - 0.05f;
         fire.position.x = this.position.x - 0.01f + Rnd.nextFloat(-0.001f, 0.001f);
         fire.setHeightProportion(height);

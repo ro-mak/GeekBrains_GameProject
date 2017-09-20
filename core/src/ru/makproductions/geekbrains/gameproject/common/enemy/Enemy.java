@@ -57,6 +57,7 @@ public class Enemy extends Ship {
         state = State.DESCEND;
         damaged = false;
         currentFrame = 0;
+        fire = new Sprite(fireTexture);
     }
 
     @Override
@@ -79,7 +80,6 @@ public class Enemy extends Ship {
 
     @Override
     protected void startEngine(SpriteBatch batch) {
-        fire = new Sprite(fireTexture);
         fire.position.y = this.getTop() + getHalfWidth() / 4;
         fire.position.x = this.position.x + Rnd.nextFloat(-0.001f, 0.001f);
         fire.setHeightProportion(height);
