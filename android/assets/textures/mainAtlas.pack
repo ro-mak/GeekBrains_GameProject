@@ -10,6 +10,34 @@ Galaxies
   orig: 1200, 1600
   offset: 0, 0
   index: -1
+PlayerShipFullVersion2
+  rotate: false
+  xy: 1216, 1364
+  size: 387, 665
+  orig: 387, 665
+  offset: 0, 0
+  index: -1
+PlayerShipFullVersion2Damage1
+  rotate: false
+  xy: 1216, 691
+  size: 387, 665
+  orig: 387, 665
+  offset: 0, 0
+  index: -1
+PlayerShipFullVersion2Damage2
+  rotate: false
+  xy: 1611, 1364
+  size: 387, 665
+  orig: 387, 665
+  offset: 0, 0
+  index: -1
+PlayerShipFullVersion2Damage3
+  rotate: false
+  xy: 1611, 691
+  size: 387, 665
+  orig: 387, 665
+  offset: 0, 0
+  index: -1
 Enemy
   rotate: false
   xy: 8, 187
@@ -17,18 +45,18 @@ Enemy
   orig: 420, 234
   offset: 0, 0
   index: -1
-ExitButton
+EnemyShipDamaged
   rotate: false
-  xy: 1216, 1825
-  size: 212, 204
-  orig: 212, 204
+  xy: 1216, 449
+  size: 420, 234
+  orig: 420, 234
   offset: 0, 0
   index: -1
-Ship
+ExitButton
   rotate: false
-  xy: 436, 203
-  size: 111, 218
-  orig: 111, 218
+  xy: 436, 217
+  size: 212, 204
+  orig: 212, 204
   offset: 0, 0
   index: -1
 EnemyEngineFire
@@ -40,21 +68,21 @@ EnemyEngineFire
   index: -1
 EnemyBullet
   rotate: false
-  xy: 1216, 1614
+  xy: 1644, 480
   size: 72, 203
   orig: 72, 203
   offset: 0, 0
   index: -1
 Fire
   rotate: false
-  xy: 1436, 1913
+  xy: 656, 305
   size: 140, 116
   orig: 140, 116
   offset: 0, 0
   index: -1
 PlayerBullet
   rotate: false
-  xy: 555, 259
+  xy: 2006, 1867
   size: 31, 162
   orig: 31, 162
   offset: 0, 0

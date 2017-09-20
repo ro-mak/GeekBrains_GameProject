@@ -18,7 +18,7 @@ import ru.makproductions.geekbrains.gameproject.common.Ship;
 
 
 public class PlayerShip extends Ship {
-
+    private static final int NUMBER_OF_REGIONS = 4;
     private static final int INVALID_POINTER = -1;
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
@@ -38,24 +38,27 @@ public class PlayerShip extends Ship {
     }
 
     public PlayerShip(TextureAtlas atlas, float vx, float vy, float height,
-                      Vector2 position, BulletPool bulletPool, ExplosionPool explosionPool,Sound shotSound) {
-        super(atlas.findRegion("Ship"), vx, vy, height, position,shotSound);
+                      Vector2 position, BulletPool bulletPool, ExplosionPool explosionPool, Sound shotSound) {
+        super(atlas.findRegion("PlayerShipFullVersion2"), NUMBER_OF_REGIONS, vx, vy, height, position, shotSound);
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
         fireTexture = atlas.findRegion("Fire");
-        bulletSpeed.set(0f,0.5f);
+        bulletSpeed.set(0f, 0.5f);
         bulletDamage = 500;
         bulletTexture = atlas.findRegion("PlayerBullet");
         bulletHeight = 0.05f;
         reloadInterval = 0.25f;
         hp = 5000;
+        regions[1] = atlas.findRegion("PlayerShipFullVersion2Damage1");
+        regions[2] = atlas.findRegion("PlayerShipFullVersion2Damage2");
+        regions[3] = atlas.findRegion("PlayerShipFullVersion2Damage3");
     }
 
     @Override
     protected void startEngine(SpriteBatch batch) {
         fire = new Sprite(fireTexture);
         fire.position.y = this.getBottom() - 0.05f;
-        fire.position.x = this.position.x - 0.02f + Rnd.nextFloat(-0.001f, 0.001f);
+        fire.position.x = this.position.x - 0.01f + Rnd.nextFloat(-0.001f, 0.001f);
         fire.setHeightProportion(height);
         fire.draw(batch);
         this.speed0.x = -0.5f;
@@ -149,12 +152,17 @@ public class PlayerShip extends Ship {
                 break;
         }
     }
+
     private int previousHp;
+    private final float DAMAGE_ANIMATION_INTERVAL = 0.05f;
+    private float damageTimer;
+
     @Override
     public void update(float delta) {
-        if(previousHp!=hp)System.out.println("Player hp left:" + hp);
+        if (previousHp != hp) System.out.println("Player hp left:" + hp);
         previousHp = hp;
-        if(hp <= 0 && !isDestroyed()) destroy();
+        if (hp <= 0 && !isDestroyed()) destroy();
+        damageAnimation(delta);
         if (getLeft() < worldBounds.getLeft()) {
             setLeft(worldBounds.getLeft());
             stop();
@@ -163,21 +171,41 @@ public class PlayerShip extends Ship {
             stop();
         }
         position.mulAdd(speed, delta);
-        reloadTimer  += delta;
-        if(reloadTimer >= reloadInterval){
+        reloadTimer += delta;
+        if (reloadTimer >= reloadInterval) {
             reloadTimer = 0f;
             shoot();
         }
     }
 
+    private void damageAnimation(float delta) {
+        if (damaged) {
+            damageTimer += delta;
+        }
+        if (damageTimer >= DAMAGE_ANIMATION_INTERVAL && damageTimer < DAMAGE_ANIMATION_INTERVAL * 2) {
+            currentFrame = 1;
+        } else if (damageTimer >= DAMAGE_ANIMATION_INTERVAL * 2 && damageTimer < DAMAGE_ANIMATION_INTERVAL * 3) {
+            currentFrame = 2;
+        } else if (damageTimer >= DAMAGE_ANIMATION_INTERVAL * 3 && damageTimer < DAMAGE_ANIMATION_INTERVAL * 4) {
+            currentFrame = 3;
+        } else if (damageTimer >= DAMAGE_ANIMATION_INTERVAL * 4) {
+            currentFrame = 0;
+            damageTimer = 0;
+            damaged = false;
+        }
+//        System.out.println("Damage Timer: " + damageTimer);
+//        System.out.println("Current Frame" + currentFrame);
+    }
+
     @Override
     public void solveCollision(Collidable collidable2) {
-        if(collidable2 instanceof Enemy){
+        if (collidable2 instanceof Enemy) {
             destroy();
-        }else if(collidable2 instanceof Bullet){
+        } else if (collidable2 instanceof Bullet) {
             Bullet bullet = (Bullet) collidable2;
-            if(bullet.getOwner()!=this) {
+            if (bullet.getOwner() != this) {
                 hp -= bullet.getDamage();
+                damaged = true;
             }
         }
 

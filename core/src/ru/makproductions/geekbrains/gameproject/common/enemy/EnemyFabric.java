@@ -17,7 +17,7 @@ public class EnemyFabric {
 
     public void createEnemy(TextureRegion[] enemyTexture, EnemyBulletPool bulletPool,
                             PlayerShip playerShip, ExplosionPool explosionPool,Sound shotSound) {
-        float vy = Rnd.nextFloat(-0.1f, -0.15f);
+        float vy = Rnd.nextFloat(-0.01f, -0.1f);
         float height = Rnd.nextFloat(0.05f, 0.1f);
         enemy = enemyPool.obtain();
         if (enemy == null) throw new RuntimeException("trying to invoke method setEnemy to null");

@@ -29,6 +29,8 @@ public class Ship extends Sprite implements Collidable {
     protected float height;
     protected Sound shotSound;
 
+    protected boolean damaged;
+
     public Vector2 getSpeed0() {
         return this.speed0;
     }
@@ -38,6 +40,15 @@ public class Ship extends Sprite implements Collidable {
     public Ship(TextureRegion shipTexture, float vx, float vy, float height,
                 Vector2 position, Sound shotSound) {
         super(shipTexture);
+        this.shotSound = shotSound;
+        this.height = height;
+        this.position.set(position);
+        speed0.set(vx, vy);
+        setHeightProportion(height);
+    }
+    public Ship(TextureRegion shipTexture,int length, float vx, float vy, float height,
+                Vector2 position, Sound shotSound) {
+        super(shipTexture,length);
         this.shotSound = shotSound;
         this.height = height;
         this.position.set(position);
@@ -65,8 +76,7 @@ public class Ship extends Sprite implements Collidable {
             bulletPosition.y = position.y + bullet_margin;
             bullet.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
                     bulletHeight, worldBounds, bulletDamage);
-            shotSound.play(0.1f);
-            //if(shotSound.play(0.1f)==-1)throw new RuntimeException("shotSound.play() == -1");
+            if(shotSound.play(0.1f)==-1)throw new RuntimeException("shotSound.play() == -1");
         }
     }
 
@@ -95,15 +105,15 @@ public class Ship extends Sprite implements Collidable {
         return hp;
     }
 
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-
     public void update(float delta) {
 
     }
 
     @Override
     public void solveCollision(Collidable collidable2) {
+    }
+
+    public void damage(int damage){
+        hp-=damage;
     }
 }

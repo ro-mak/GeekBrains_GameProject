@@ -29,7 +29,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     private StarsOfMenu[] stars;
 
     private MenuShip ship;
-    private final float SHIP_HEIGHT = 0.4f;
+    private final float SHIP_HEIGHT = 0.35f;
 
     private ButtonStartGame startButton;
     private final float BUTTON_START_HEIGHT = 0.2f;

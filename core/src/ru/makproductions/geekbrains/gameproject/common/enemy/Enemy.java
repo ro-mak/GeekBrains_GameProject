@@ -3,6 +3,7 @@ package ru.makproductions.geekbrains.gameproject.common.enemy;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 import ru.makproductions.geekbrains.gameproject.common.Bullet;
 import ru.makproductions.geekbrains.gameproject.common.Collidable;
@@ -15,15 +16,19 @@ import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
 
 public class Enemy extends Ship {
 
+    private enum State {DESCEND, ACTION}
+
     private PlayerShip playerShip;
     private EnemyBulletPool bulletPool;
+    private State state;
+    private final Vector2 descendSpeed = new Vector2(0f, -0.5f);
 
     public Enemy() {
     }
 
     public void setEnemy(TextureRegion[] enemyTexture, float vx, float vy, float height,
                          EnemyBulletPool bulletPool, Rect worldBounds,
-                         PlayerShip playerShip, ExplosionPool explosionPool,Sound shotSound) {
+                         PlayerShip playerShip, ExplosionPool explosionPool, Sound shotSound) {
         this.shotSound = shotSound;
         regions = enemyTexture;
         fireTexture = enemyTexture[1];
@@ -34,34 +39,42 @@ public class Enemy extends Ship {
         this.height = height;
         setHeightProportion(height);
         speed0.set(vx, vy / (height * 10));
+//        System.out.println("VY: "+vy);
+//        System.out.println("Height: "+height);
+//        System.out.println("speed0: "+speed0);
         float positionX = Rnd.nextFloat(worldBounds.getLeft() + halfWidth, worldBounds.getRight() - halfWidth);
         position.set(positionX, worldBounds.getTop());
         setEngineStarted(true);
 
-        hp = (int)(100/height);
+        hp = (int) (100 / height);
         bulletHeight = getHalfHeight();
         bullet_margin = -(getHalfHeight());
         bulletSpeed.set(0f, -0.05f / height);
-        bulletDamage = (int) (10/height);
+        bulletDamage = (int) (10 / height);
         reloadInterval = height * 30;
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
+        state = State.DESCEND;
+        damaged = false;
+        currentFrame = 0;
     }
 
     @Override
     protected void shoot() {
-        EnemyBullet bullet1 = bulletPool.obtain();
-        bulletPosition.x = getLeft() + getHalfWidth() / 2;
-        bulletPosition.y = position.y + bullet_margin;
-        bullet1.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
-                bulletHeight, worldBounds, bulletDamage, playerShip);
-        if(shotSound.play(0.3f)==-1)throw new RuntimeException("shotSound.play()==-1");
-        EnemyBullet bullet2 = bulletPool.obtain();
-        bulletPosition.x = getRight() - getHalfWidth() / 2;
-        bulletPosition.y = position.y + bullet_margin;
-        bullet2.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
-                bulletHeight, worldBounds, bulletDamage, playerShip);
-        if(shotSound.play(0.3f)==-1)throw new RuntimeException("shotSound.play()==-1");
+        if (state == State.ACTION) {
+            EnemyBullet bullet1 = bulletPool.obtain();
+            bulletPosition.x = getLeft() + getHalfWidth() / 2;
+            bulletPosition.y = position.y + bullet_margin;
+            bullet1.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
+                    bulletHeight, worldBounds, bulletDamage, playerShip);
+            if (shotSound.play(0.3f) == -1) throw new RuntimeException("shotSound.play()==-1");
+            EnemyBullet bullet2 = bulletPool.obtain();
+            bulletPosition.x = getRight() - getHalfWidth() / 2;
+            bulletPosition.y = position.y + bullet_margin;
+            bullet2.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
+                    bulletHeight, worldBounds, bulletDamage, playerShip);
+            if (shotSound.play(0.3f) == -1) throw new RuntimeException("shotSound.play()==-1");
+        }
     }
 
     @Override
@@ -75,34 +88,65 @@ public class Enemy extends Ship {
 
     @Override
     public void solveCollision(Collidable collidable2) {
-        if(collidable2 instanceof PlayerShip){
+        if (collidable2 instanceof PlayerShip) {
             destroy();
         }
-        if (collidable2 instanceof Bullet){
+        if (collidable2 instanceof Bullet) {
             Bullet bullet = (Bullet) collidable2;
-            if(bullet.getOwner() instanceof PlayerShip) {
-                hp -= bullet.getDamage();
+            if (bullet.getOwner() instanceof PlayerShip) {
+                damage(bullet.getDamage());
+                damaged = true;
             }
         }
     }
 
     @Override
     public void update(float deltaTime) {
-        if(hp <=0)destroy();
-        if (this.getBottom() <= worldBounds.getBottom()) {
-            playerShip.setHp(playerShip.getHp()-bulletDamage);
-            destroy();
+        if (this.getTop() <= worldBounds.getTop()) {
+            state = State.ACTION;
         }
+        if (state == State.ACTION) {
+            if (hp <= 0) destroy();
+            if (this.getBottom() <= worldBounds.getBottom()) {
+                playerShip.damage(bulletDamage);
+                destroy();
+            }
 
-        position.mulAdd(speed0, deltaTime);
-        if (playerShip.isMoving()) {
-            position.x -= playerShip.getSpeed().x / 1000;
+            damageAnimation(deltaTime);
+
+            position.mulAdd(speed0, deltaTime);
+            if (playerShip.isMoving()) {
+                position.x -= playerShip.getSpeed().x / 1000;
+            }
+
+            reloadTimer += deltaTime;
+            if (reloadTimer >= reloadInterval) {
+                reloadTimer = 0f;
+                shoot();
+            }
+        } else if (state == State.DESCEND) {
+            position.mulAdd(descendSpeed, deltaTime);
+            if (playerShip.isMoving()) {
+                position.x -= playerShip.getSpeed().x / 1000;
+            }
+        } else {
+            throw new RuntimeException("Unknown state: " + state);
         }
+    }
 
-        reloadTimer += deltaTime;
-        if (reloadTimer >= reloadInterval) {
-            reloadTimer = 0f;
-            shoot();
+
+    private final float DAMAGE_ANIMATION_INTERVAL = 0.1f;
+    private float damageTimer;
+
+    private void damageAnimation(float delta) {
+        if (damaged) {
+            damageTimer += delta;
+            currentFrame = 3;
+        }
+        if(damageTimer >= DAMAGE_ANIMATION_INTERVAL){
+            damaged = false;
+            currentFrame = 0;
+            damageTimer = 0;
         }
     }
 

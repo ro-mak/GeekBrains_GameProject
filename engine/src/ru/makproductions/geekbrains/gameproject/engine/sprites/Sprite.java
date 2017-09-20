@@ -24,6 +24,13 @@ public class Sprite extends Rect {
         regions[0] = region;
 
     }
+    public Sprite(TextureRegion region,int length){
+        if(region == null)
+            throw new RuntimeException("Created Sprite with null region");
+        regions = new TextureRegion[length];
+        regions[0] = region;
+
+    }
 
     public Sprite(TextureRegion region, int rows, int cols, int frames) {
                 regions = Regions.split(region, rows, cols, frames);

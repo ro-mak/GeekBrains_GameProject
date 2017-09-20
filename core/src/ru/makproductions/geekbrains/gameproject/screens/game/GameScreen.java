@@ -32,7 +32,7 @@ public class GameScreen extends Base2DScreen {
     private CollisionDetector collisionDetector;
     private EnemyPool enemyPool;
     private EnemyFabric enemyFabric;
-    private TextureRegion[] enemyTextures = new TextureRegion[3];
+    private TextureRegion[] enemyTextures = new TextureRegion[4];
     private final BulletPool bulletPool = new BulletPool();
     private final EnemyBulletPool enemyBulletPool = new EnemyBulletPool();
     private ExplosionPool explosionPool;
@@ -46,38 +46,40 @@ public class GameScreen extends Base2DScreen {
     private final int STARS_COUNT = 150;
     private final float STARS_HEIGHT = 0.05f;
     private PlayerShip playerShip;
-    private final float SHIP_HEIGHT = 0.2f;
+    private final float SHIP_HEIGHT = 0.15f;
     private AssetManager assetManager;
+
     @Override
     public void show() {
         super.show();
         assetManager = new AssetManager();
-        assetManager.load("textures/mainAtlas.pack",TextureAtlas.class);
-            assetManager.load("sounds/Explosion.wav",Sound.class);
-            assetManager.load("sounds/PlayerShot.wav",Sound.class);
-            assetManager.load("sounds/EnemyShot.wav",Sound.class);
+        assetManager.load("sounds/PlayerShot.wav", Sound.class);
+        assetManager.load("sounds/Explosion.wav", Sound.class);
+        assetManager.load("sounds/EnemyShot.wav", Sound.class);
+        assetManager.load("textures/mainAtlas.pack", TextureAtlas.class);
         assetManager.finishLoading();
-        atlas = assetManager.get("textures/mainAtlas.pack",TextureAtlas.class);
+        atlas = assetManager.get("textures/mainAtlas.pack", TextureAtlas.class);
         enemyTextures[0] = atlas.findRegion("Enemy");
         enemyTextures[1] = atlas.findRegion("EnemyEngineFire");
         enemyTextures[2] = atlas.findRegion("EnemyBullet");
-        soundExplosion = assetManager.get("sounds/Explosion.wav",Sound.class);
-        playerShotSound = assetManager.get("sounds/PlayerShot.wav",Sound.class);
-        enemyShotSound = assetManager.get("sounds/EnemyShot.wav",Sound.class);
-        explosionPool = new ExplosionPool(atlas,soundExplosion);
+        enemyTextures[3] = atlas.findRegion("EnemyShipDamaged");
+        soundExplosion = assetManager.get("sounds/Explosion.wav", Sound.class);
+        playerShotSound = assetManager.get("sounds/PlayerShot.wav", Sound.class);
+        enemyShotSound = assetManager.get("sounds/EnemyShot.wav", Sound.class);
+        explosionPool = new ExplosionPool(atlas, soundExplosion);
         enemyPool = new EnemyPool();
         enemyFabric = new EnemyFabric(enemyPool);
         background = new Background(atlas.findRegion("Galaxies"));
         stars = new StarsOfGame[STARS_COUNT];
         playerShip =
                 new PlayerShip
-                        (atlas,0,0,SHIP_HEIGHT,new Vector2(0f,0f),bulletPool,explosionPool,playerShotSound);
+                        (atlas, 0, 0, SHIP_HEIGHT, new Vector2(0f, 0f), bulletPool, explosionPool, playerShotSound);
         playerShip.setEngineStarted(true);
         for (int i = 0; i < stars.length; i++) {
-            float starHeight = STARS_HEIGHT * Rnd.nextFloat(0.3f,0.8f);
-            float vx = Rnd.nextFloat(-0.0008f,0.0008f);
-            float vy = Rnd.nextFloat(-0.0001f,-0.02f);
-            stars[i] = new StarsOfGame(atlas.findRegion("Star"), playerShip,vx,vy,starHeight);
+            float starHeight = STARS_HEIGHT * Rnd.nextFloat(0.3f, 0.8f);
+            float vx = Rnd.nextFloat(-0.0008f, 0.0008f);
+            float vy = Rnd.nextFloat(-0.0001f, -0.02f);
+            stars[i] = new StarsOfGame(atlas.findRegion("Star"), playerShip, vx, vy, starHeight);
         }
         collisionDetector = new CollisionDetector();
         playMusic();
@@ -94,7 +96,7 @@ public class GameScreen extends Base2DScreen {
         enemyPool.resizeActiveSprites(worldBounds);
     }
 
-    private void playMusic(){
+    private void playMusic() {
         music_level1 = Gdx.audio.newMusic(Gdx.files.internal("music/StarFighterMusicWarriorDrums.wav"));
         music_level1.setLooping(true);
         music_level1.play();
@@ -109,10 +111,11 @@ public class GameScreen extends Base2DScreen {
     }
 
     float timer;
-    private void update(float delta){
-        if((timer+=delta) >= 3) {
+
+    private void update(float delta) {
+        if ((timer += delta) >= 3) {
             timer = 0;
-            enemyFabric.createEnemy(enemyTextures,enemyBulletPool, playerShip,explosionPool,enemyShotSound);
+            enemyFabric.createEnemy(enemyTextures, enemyBulletPool, playerShip, explosionPool, enemyShotSound);
         }
         background.update(delta);
         for (int i = 0; i < stars.length; i++) {
@@ -124,7 +127,8 @@ public class GameScreen extends Base2DScreen {
         enemyPool.updateActiveSprites(delta);
         playerShip.update(delta);
     }
-    private void checkCollisions(){
+
+    private void checkCollisions() {
         collisionDetector.detectCollisions();
         collisionDetector.addActiveObjects(playerShip);
         collisionDetector.addActiveObjects(enemyPool.getActiveObjects());
@@ -132,7 +136,7 @@ public class GameScreen extends Base2DScreen {
         collisionDetector.addActiveObjects(enemyBulletPool.getActiveObjects());
     }
 
-    private void deleteAllDestroyed(){
+    private void deleteAllDestroyed() {
         collisionDetector.removeDestroyed();
         enemyBulletPool.freeAllDestroyedActiveObjects();
         bulletPool.freeAllDestroyedActiveObjects();
@@ -140,7 +144,7 @@ public class GameScreen extends Base2DScreen {
         enemyPool.freeAllDestroyedActiveObjects();
     }
 
-    private void draw(){
+    private void draw() {
         Gdx.gl.glClearColor(0.7f, 0.7f, 0.7f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
@@ -173,17 +177,17 @@ public class GameScreen extends Base2DScreen {
 
     @Override
     protected void touchDown(Vector2 touch, int pointer) {
-        playerShip.touchDown(touch,pointer);
+        playerShip.touchDown(touch, pointer);
     }
 
     @Override
     protected void touchUp(Vector2 touch, int pointer) {
-        playerShip.touchUp(touch,pointer);
+        playerShip.touchUp(touch, pointer);
     }
 
     @Override
     protected void touchMove(Vector2 touch, int pointer) {
-        playerShip.touchMove(touch,pointer);
+        playerShip.touchMove(touch, pointer);
     }
 
     @Override

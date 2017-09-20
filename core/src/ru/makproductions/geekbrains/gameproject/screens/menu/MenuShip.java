@@ -11,7 +11,7 @@ import ru.makproductions.geekbrains.gameproject.common.Ship;
 public class MenuShip extends Ship {
 
     public MenuShip(TextureAtlas atlas, float vx, float vy, float height, Vector2 position) {
-        super(atlas.findRegion("Ship"), vx, vy, height, position,null);
+        super(atlas.findRegion("PlayerShipFullVersion2"), vx, vy, height, position,null);
         acceleration = 0.0003f;
         fireTexture = atlas.findRegion("Fire");
     }
