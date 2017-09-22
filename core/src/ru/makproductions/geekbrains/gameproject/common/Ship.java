@@ -92,10 +92,10 @@ public class Ship extends Sprite implements Collidable {
     @Override
     public void destroy() {
         setEngineStarted(false);
-        super.destroy();
         Explosion explosion = explosionPool.obtain();
         explosion.setExplosion(this.height, this.position);
         speed0.setZero();
+        super.destroy();
     }
 
     protected void startEngine(SpriteBatch batch) {

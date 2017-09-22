@@ -161,7 +161,7 @@ public class PlayerShip extends Ship {
     public void update(float delta) {
         if (previousHp != hp) System.out.println("Player hp left:" + hp);
         previousHp = hp;
-        if (hp <= 0 && !isDestroyed()) destroy();
+        if (hp <= 0 & !isDestroyed()) destroy();
         damageAnimation(delta);
         if (getLeft() < worldBounds.getLeft()) {
             setLeft(worldBounds.getLeft());
@@ -204,7 +204,7 @@ public class PlayerShip extends Ship {
         } else if (collidable2 instanceof Bullet) {
             Bullet bullet = (Bullet) collidable2;
             if (bullet.getOwner() != this) {
-                hp -= bullet.getDamage();
+                damage(bullet.getDamage());
                 damaged = true;
             }
         }

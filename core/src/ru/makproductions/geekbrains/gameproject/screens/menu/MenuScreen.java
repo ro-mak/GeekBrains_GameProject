@@ -22,7 +22,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     private static final float STAR_HEIGHT = 0.03f;
     private static final int STAR_COUNT = 25;
 
-    private TextureAtlas atlas;
+    private TextureAtlas menuAtlas;
 
     private Background background;
 
@@ -46,21 +46,21 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     @Override
     public void show () {
         super.show();
-        atlas = new TextureAtlas("textures/mainAtlas.pack");
+        menuAtlas = new TextureAtlas("textures/menuAtlas.pack");
 
-        background = new Background(atlas.findRegion("StartOfStarFighter"));
+        background = new Background(menuAtlas.findRegion("StartOfStarFighter"));
 
         stars = new StarsOfMenu[STAR_COUNT];
         for(int i = 0; i < stars.length; i++) {
             float starHeight = STAR_HEIGHT * Rnd.nextFloat(0.5f,0.8f);
             float vx = Rnd.nextFloat(0,0.006f);
             float vy = Rnd.nextFloat(-0.0008f,0.0008f);
-            stars[i] = new StarsOfMenu(atlas.findRegion("Star")
+            stars[i] = new StarsOfMenu(menuAtlas.findRegion("Star")
                     , vx, vy, starHeight);
         }
-        startButton = new ButtonStartGame(atlas,BUTTON_START_HEIGHT,this);
-        exitButton = new ButtonExit(atlas,BUTTON_EXIT_HEIGHT,this);
-        ship = new MenuShip(atlas,0,0,SHIP_HEIGHT,new Vector2(0f,-0.2f));
+        startButton = new ButtonStartGame(menuAtlas,BUTTON_START_HEIGHT,this);
+        exitButton = new ButtonExit(menuAtlas,BUTTON_EXIT_HEIGHT,this);
+        ship = new MenuShip(menuAtlas,0,0,SHIP_HEIGHT,new Vector2(0f,-0.2f));
         playMusic();
     }
 
@@ -113,7 +113,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
 
     @Override
     public void dispose () {
-        atlas.dispose();
+        menuAtlas.dispose();
         music_level1.dispose();
         super.dispose();
     }

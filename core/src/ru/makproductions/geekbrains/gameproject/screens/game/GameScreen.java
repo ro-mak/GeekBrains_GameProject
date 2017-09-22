@@ -2,7 +2,6 @@ package ru.makproductions.geekbrains.gameproject.screens.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,6 +19,7 @@ import ru.makproductions.geekbrains.gameproject.common.explosions.ExplosionPool;
 import ru.makproductions.geekbrains.gameproject.common.player.PlayerShip;
 import ru.makproductions.geekbrains.gameproject.common.stars.StarsOfGame;
 import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
+import ru.makproductions.geekbrains.gameproject.engine.Sprite2DTexture;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
 
@@ -39,51 +39,46 @@ public class GameScreen extends Base2DScreen {
     private Sound soundExplosion;
     private Sound playerShotSound;
     private Sound enemyShotSound;
-    private TextureAtlas atlas;
+    private TextureAtlas gameAtlas;
+    private Sprite2DTexture textureBackground;
     private Background background;
     private Music music_level1;
     private StarsOfGame[] stars;
-    private final int STARS_COUNT = 150;
+    private final int STARS_COUNT = 50;
     private final float STARS_HEIGHT = 0.05f;
     private PlayerShip playerShip;
     private final float SHIP_HEIGHT = 0.15f;
-    private AssetManager assetManager;
 
     @Override
     public void show() {
         super.show();
-        assetManager = new AssetManager();
-        assetManager.load("sounds/PlayerShot.wav", Sound.class);
-        assetManager.load("sounds/Explosion.wav", Sound.class);
-        assetManager.load("sounds/EnemyShot.wav", Sound.class);
-        assetManager.load("textures/mainAtlas.pack", TextureAtlas.class);
-        assetManager.finishLoading();
-        atlas = assetManager.get("textures/mainAtlas.pack", TextureAtlas.class);
-        enemyTextures[0] = atlas.findRegion("Enemy");
-        enemyTextures[1] = atlas.findRegion("EnemyEngineFire");
-        enemyTextures[2] = atlas.findRegion("EnemyBullet");
-        enemyTextures[3] = atlas.findRegion("EnemyShipDamaged");
-        soundExplosion = assetManager.get("sounds/Explosion.wav", Sound.class);
-        playerShotSound = assetManager.get("sounds/PlayerShot.wav", Sound.class);
-        enemyShotSound = assetManager.get("sounds/EnemyShot.wav", Sound.class);
-        explosionPool = new ExplosionPool(atlas, soundExplosion);
+        soundExplosion = Gdx.audio.newSound(Gdx.files.internal("sounds/Explosion.wav"));
+        playerShotSound = Gdx.audio.newSound(Gdx.files.internal("sounds/PlayerShot.wav"));
+        enemyShotSound = Gdx.audio.newSound(Gdx.files.internal("sounds/EnemyShot.wav"));
+        gameAtlas = new TextureAtlas("textures/gameAtlas.pack");
+        textureBackground = new Sprite2DTexture("textures/Galaxies.png");
+        background = new Background(new TextureRegion(textureBackground));
+        stars = new StarsOfGame[STARS_COUNT];
+        explosionPool = new ExplosionPool(gameAtlas, soundExplosion);
         enemyPool = new EnemyPool();
         enemyFabric = new EnemyFabric(enemyPool);
-        background = new Background(atlas.findRegion("Galaxies"));
-        stars = new StarsOfGame[STARS_COUNT];
         playerShip =
                 new PlayerShip
-                        (atlas, 0, 0, SHIP_HEIGHT, new Vector2(0f, 0f), bulletPool, explosionPool, playerShotSound);
+                        (gameAtlas, 0, 0, SHIP_HEIGHT, new Vector2(0f, 0f), bulletPool, explosionPool, playerShotSound);
         playerShip.setEngineStarted(true);
         for (int i = 0; i < stars.length; i++) {
             float starHeight = STARS_HEIGHT * Rnd.nextFloat(0.3f, 0.8f);
             float vx = Rnd.nextFloat(-0.0008f, 0.0008f);
             float vy = Rnd.nextFloat(-0.0001f, -0.02f);
-            stars[i] = new StarsOfGame(atlas.findRegion("Star"), playerShip, vx, vy, starHeight);
+            stars[i] = new StarsOfGame(gameAtlas.findRegion("Star"), playerShip, vx, vy, starHeight);
         }
         collisionDetector = new CollisionDetector();
-        playMusic();
+        enemyTextures[0] = gameAtlas.findRegion("Enemy");
+        enemyTextures[1] = gameAtlas.findRegion("EnemyEngineFire");
+        enemyTextures[2] = gameAtlas.findRegion("EnemyBullet");
+        enemyTextures[3] = gameAtlas.findRegion("EnemyShipDamaged");
 
+        playMusic();
     }
 
     @Override
@@ -162,7 +157,7 @@ public class GameScreen extends Base2DScreen {
 
     @Override
     public void dispose() {
-        atlas.dispose();
+        gameAtlas.dispose();
         music_level1.dispose();
         soundExplosion.dispose();
         playerShotSound.dispose();
@@ -171,7 +166,6 @@ public class GameScreen extends Base2DScreen {
         enemyBulletPool.dispose();
         explosionPool.dispose();
         enemyPool.dispose();
-        assetManager.dispose();
         super.dispose();
     }
 

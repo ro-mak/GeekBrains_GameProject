@@ -1,9 +1,9 @@
 
-mainAtlas.png
+gameAtlas.png
 format: RGBA8888
 filter: MipMapLinearNearest,Linear
 repeat: none
-Galaxies
+Star
   rotate: false
   xy: 8, 429
   size: 1200, 1600
@@ -52,13 +52,6 @@ EnemyShipDamaged
   orig: 420, 234
   offset: 0, 0
   index: -1
-ExitButton
-  rotate: false
-  xy: 436, 217
-  size: 212, 204
-  orig: 212, 204
-  offset: 0, 0
-  index: -1
 EnemyEngineFire
   rotate: false
   xy: 8, 8
@@ -68,14 +61,14 @@ EnemyEngineFire
   index: -1
 EnemyBullet
   rotate: false
-  xy: 1644, 480
+  xy: 436, 218
   size: 72, 203
   orig: 72, 203
   offset: 0, 0
   index: -1
 Fire
   rotate: false
-  xy: 656, 305
+  xy: 1644, 567
   size: 140, 116
   orig: 140, 116
   offset: 0, 0
@@ -88,45 +81,14 @@ PlayerBullet
   offset: 0, 0
   index: -1
 
-mainAtlas2.png
-format: RGBA8888
-filter: MipMapLinearNearest,Linear
-repeat: none
-Star
-  rotate: false
-  xy: 8, 8
-  size: 1200, 1600
-  orig: 1200, 1600
-  offset: 0, 0
-  index: -1
-
-mainAtlas3.png
-format: RGBA8888
-filter: MipMapLinearNearest,Linear
-repeat: none
-StartOfStarFighter
-  rotate: false
-  xy: 8, 8
-  size: 1200, 1600
-  orig: 1200, 1600
-  offset: 0, 0
-  index: -1
-
-mainAtlas4.png
+gameAtlas2.png
 format: RGBA8888
 filter: MipMapLinearNearest,Linear
 repeat: none
 ExplosionParticle
   rotate: false
-  xy: 8, 467
+  xy: 8, 8
   size: 948, 1302
   orig: 948, 1302
-  offset: 0, 0
-  index: -1
-StartButton
-  rotate: false
-  xy: 8, 8
-  size: 1114, 451
-  orig: 1114, 451
   offset: 0, 0
   index: -1
