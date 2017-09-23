@@ -106,7 +106,11 @@ public class Enemy extends Ship {
             state = State.ACTION;
         }
         if (state == State.ACTION) {
-            if (hp <= 0) destroy();
+            if (hp <= 0) {
+                hp = 0;
+                playerShip.plusFrag();
+                destroy();
+            }
             if (this.getBottom() <= worldBounds.getBottom()) {
                 playerShip.damage(bulletDamage);
                 destroy();

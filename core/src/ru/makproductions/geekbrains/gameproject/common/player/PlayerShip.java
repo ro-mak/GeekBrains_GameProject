@@ -22,6 +22,7 @@ public class PlayerShip extends Ship {
     private static final int INVALID_POINTER = -1;
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
+    private int frags;
     private boolean isMoving;
 
     public boolean isMoving() {
@@ -154,14 +155,21 @@ public class PlayerShip extends Ship {
     }
 
     private int previousHp;
+    private int previousFrags;
     private final float DAMAGE_ANIMATION_INTERVAL = 0.05f;
     private float damageTimer;
 
     @Override
     public void update(float delta) {
+        if(previousFrags != frags) System.out.println("Frags: " + frags);
         if (previousHp != hp) System.out.println("Player hp left:" + hp);
         previousHp = hp;
-        if (hp <= 0 & !isDestroyed()) destroy();
+        previousFrags = frags;
+        if (hp <= 0 & !isDestroyed()){
+            hp = 0;
+            destroy();
+        }
+
         damageAnimation(delta);
         if (getLeft() < worldBounds.getLeft()) {
             setLeft(worldBounds.getLeft());
@@ -209,5 +217,9 @@ public class PlayerShip extends Ship {
             }
         }
 
+    }
+
+    public void plusFrag(){
+        frags += 1;
     }
 }
