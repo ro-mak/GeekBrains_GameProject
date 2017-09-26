@@ -19,6 +19,7 @@ import ru.makproductions.geekbrains.gameproject.common.explosions.ExplosionPool;
 import ru.makproductions.geekbrains.gameproject.common.player.PlayerShip;
 import ru.makproductions.geekbrains.gameproject.common.stars.StarsOfGame;
 import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
+import ru.makproductions.geekbrains.gameproject.engine.Font;
 import ru.makproductions.geekbrains.gameproject.engine.Sprite2DTexture;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
@@ -30,19 +31,27 @@ public class GameScreen extends Base2DScreen {
     }
 
     private CollisionDetector collisionDetector;
+
     private EnemyPool enemyPool;
     private EnemyFabric enemyFabric;
     private TextureRegion[] enemyTextures = new TextureRegion[4];
-    private final BulletPool bulletPool = new BulletPool();
+
     private final EnemyBulletPool enemyBulletPool = new EnemyBulletPool();
+
+    private final BulletPool bulletPool = new BulletPool();
     private ExplosionPool explosionPool;
+
+    private Music music_level1;
     private Sound soundExplosion;
     private Sound playerShotSound;
     private Sound enemyShotSound;
+
     private TextureAtlas gameAtlas;
     private Sprite2DTexture textureBackground;
     private Background background;
-    private Music music_level1;
+    private Font font;
+
+
     private StarsOfGame[] stars;
     private final int STARS_COUNT = 50;
     private final float STARS_HEIGHT = 0.05f;
@@ -52,6 +61,8 @@ public class GameScreen extends Base2DScreen {
     @Override
     public void show() {
         super.show();
+        font = new Font("fonts/font.fnt","fonts/font.png");
+        font.setWorldSize(0.05f);
         soundExplosion = Gdx.audio.newSound(Gdx.files.internal("sounds/Explosion.wav"));
         playerShotSound = Gdx.audio.newSound(Gdx.files.internal("sounds/PlayerShot.wav"));
         enemyShotSound = Gdx.audio.newSound(Gdx.files.internal("sounds/EnemyShot.wav"));
@@ -152,6 +163,8 @@ public class GameScreen extends Base2DScreen {
         explosionPool.drawActiveObjects(batch);
         enemyPool.drawActiveObjects(batch);
         playerShip.draw(batch);
+        font.draw(batch,"Frags: " + playerShip.getFrags(),worldBounds.getLeft(),worldBounds.getTop());
+        font.draw(batch,"HP: " + playerShip.getHp(),worldBounds.getRight() - 0.25f,worldBounds.getTop());
         batch.end();
     }
 

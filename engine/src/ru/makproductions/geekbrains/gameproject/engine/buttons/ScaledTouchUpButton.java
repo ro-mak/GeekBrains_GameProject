@@ -11,6 +11,7 @@ public class ScaledTouchUpButton extends Sprite {
     private int pointer;
     private final ActionListener actionListener;
     private float originalScale;
+    protected float scaleSize = 0.1f;
     private boolean touched;
 
     public ScaledTouchUpButton(TextureRegion region, float height,ActionListener actionListener) {
@@ -19,13 +20,29 @@ public class ScaledTouchUpButton extends Sprite {
         setHeightProportion(height);
         originalScale = getScale();
     }
+        public ScaledTouchUpButton(float height,ActionListener actionListener) {
+        super();
+        this.actionListener = actionListener;
+        originalScale = getScale();
+    }
+
+    protected void scaleUp(){
+        setScale(getScale() + scaleSize);
+    }
+    protected void scaleDown(){
+        setScale(getScale() - scaleSize);
+    }
+
+    protected void returnScale(){
+        scale = 1f;
+    }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
         if(touched || !isMe(touch)) return  false;
         touched = true;
         this.pointer = pointer;
-        setScale(getScale() - 0.1f);
+        scaleDown();
         return true;
     }
 
@@ -33,9 +50,9 @@ public class ScaledTouchUpButton extends Sprite {
     public boolean touchUp(Vector2 touch, int pointer) {
         if(!touched || this.pointer != pointer)return false;
         touched = false;
-        scale = 1f;
+        returnScale();
         if(isMe(touch)) {
-            setScale(getScale() + 0.1f);
+            scaleUp();
             actionListener.actionPerformed(this);
         }
 

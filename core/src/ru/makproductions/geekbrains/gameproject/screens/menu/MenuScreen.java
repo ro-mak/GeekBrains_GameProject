@@ -58,7 +58,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
             stars[i] = new StarsOfMenu(menuAtlas.findRegion("Star")
                     , vx, vy, starHeight);
         }
-        startButton = new ButtonStartGame(menuAtlas,BUTTON_START_HEIGHT,this);
+        startButton = new ButtonStartGame(BUTTON_START_HEIGHT,this);
         exitButton = new ButtonExit(menuAtlas,BUTTON_EXIT_HEIGHT,this);
         ship = new MenuShip(menuAtlas,0,0,SHIP_HEIGHT,new Vector2(0f,-0.2f));
         playMusic();

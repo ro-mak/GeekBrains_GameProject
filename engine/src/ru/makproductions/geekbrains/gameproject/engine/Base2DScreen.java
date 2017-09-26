@@ -19,9 +19,9 @@ public class Base2DScreen implements Screen,InputProcessor {
     protected SpriteBatch batch;
     private static final float WORLD_HEIGHT = 1;
 
-    private  final Rect screenBounds = new Rect();
-    private  final Rect worldBounds = new Rect();
-    private  final Rect glBounds = new Rect(0f,0f,1f,1f);
+    protected   final Rect screenBounds = new Rect();
+    protected   final Rect worldBounds = new Rect();
+    protected   final Rect glBounds = new Rect(0f,0f,1f,1f);
 
     protected final Matrix4 matWorldToGl = new Matrix4();
 
@@ -32,7 +32,6 @@ public class Base2DScreen implements Screen,InputProcessor {
     @Override
     public void show() {
         Gdx.app.log("Util","Screen Show");
-        System.out.println("Screen Show");
         Gdx.input.setInputProcessor(this);
         if(batch != null) throw new RuntimeException("Batch != null, dispose не вызван");
         batch = new SpriteBatch();
@@ -43,7 +42,6 @@ public class Base2DScreen implements Screen,InputProcessor {
     @Override
     public void resize(int width, int height) {
         Gdx.app.log("Util","Screen resize: width = " + width + " height = " + height);
-        System.out.println("Screen resize: width = " + width + " height = " + height);
         screenBounds.setSize(width,height);
         screenBounds.setLeft(0);
         screenBounds.setBottom(0);
@@ -65,20 +63,17 @@ public class Base2DScreen implements Screen,InputProcessor {
 
     @Override
     public void resume() {
-        System.out.println("Screen resume");
         Gdx.app.log("Util","Screen resume");
     }
 
     @Override
     public void hide() {
-        System.out.println("Screen hide");
         Gdx.app.log("Util","Screen hide");
         dispose();
     }
 
     @Override
     public void dispose() {
-        System.out.println("Screen dispose");
         Gdx.app.log("Util","Screen dispose");
         batch.dispose();
         batch = null;

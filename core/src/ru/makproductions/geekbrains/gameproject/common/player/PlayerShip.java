@@ -50,6 +50,7 @@ public class PlayerShip extends Ship {
         bulletHeight = 0.05f;
         reloadInterval = 0.25f;
         hp = 5000;
+        fullHP = hp;
         regions[1] = atlas.findRegion("PlayerShipFullVersion2Damage1");
         regions[2] = atlas.findRegion("PlayerShipFullVersion2Damage2");
         regions[3] = atlas.findRegion("PlayerShipFullVersion2Damage3");
@@ -154,17 +155,16 @@ public class PlayerShip extends Ship {
         }
     }
 
-    private int previousHp;
-    private int previousFrags;
     private final float DAMAGE_ANIMATION_INTERVAL = 0.05f;
     private float damageTimer;
 
+    public int getFrags() {
+        return frags;
+    }
+
     @Override
     public void update(float delta) {
-        if(previousFrags != frags) System.out.println("Frags: " + frags);
-        if (previousHp != hp) System.out.println("Player hp left:" + hp);
-        previousHp = hp;
-        previousFrags = frags;
+
         if (hp <= 0 & !isDestroyed()){
             hp = 0;
             destroy();

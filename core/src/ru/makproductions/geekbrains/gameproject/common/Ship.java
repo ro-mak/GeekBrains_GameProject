@@ -17,7 +17,7 @@ public class Ship extends Sprite implements Collidable {
     protected BulletPool bulletPool;
     protected TextureRegion bulletTexture;
     protected Sound bulletSound;
-    protected int hp;
+    protected float hp;
 
     protected TextureRegion fireTexture;
     protected Sprite fire;
@@ -35,7 +35,8 @@ public class Ship extends Sprite implements Collidable {
         return this.speed0;
     }
 
-    public Ship(){}
+    public Ship(){
+    }
 
     public Ship(TextureRegion shipTexture, float vx, float vy, float height,
                 Vector2 position, Sound shotSound) {
@@ -101,8 +102,9 @@ public class Ship extends Sprite implements Collidable {
     protected void startEngine(SpriteBatch batch) {
     }
 
+    protected float fullHP;
     public int getHp() {
-        return hp;
+        return (int)(((hp/fullHP)) * 100);
     }
 
     public void update(float delta) {
