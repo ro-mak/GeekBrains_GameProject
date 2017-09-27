@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+
 import ru.makproductions.geekbrains.gameproject.common.Background;
 import ru.makproductions.geekbrains.gameproject.common.BulletPool;
 import ru.makproductions.geekbrains.gameproject.common.CollisionDetector;
@@ -21,6 +22,7 @@ import ru.makproductions.geekbrains.gameproject.common.stars.StarsOfGame;
 import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
 import ru.makproductions.geekbrains.gameproject.engine.Font;
 import ru.makproductions.geekbrains.gameproject.engine.Sprite2DTexture;
+import ru.makproductions.geekbrains.gameproject.engine.StrBuilder;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
 
@@ -163,9 +165,19 @@ public class GameScreen extends Base2DScreen {
         explosionPool.drawActiveObjects(batch);
         enemyPool.drawActiveObjects(batch);
         playerShip.draw(batch);
-        font.draw(batch,"Frags: " + playerShip.getFrags(),worldBounds.getLeft(),worldBounds.getTop());
-        font.draw(batch,"HP: " + playerShip.getHp(),worldBounds.getRight() - 0.25f,worldBounds.getTop());
+        printInfo();
         batch.end();
+    }
+
+    private static final String FRAGS = "Frags: ";
+    private static final String HP = "HP: ";
+    private static final float HP_INFO_MARGIN_X = 0.25f;
+    private StrBuilder strBuilder = new StrBuilder();
+    private void printInfo(){
+        font.draw(batch,strBuilder.clear().append(FRAGS).append(playerShip.getFrags()),
+                worldBounds.getLeft(),worldBounds.getTop());
+        font.draw(batch,strBuilder.clear().append(HP).append(playerShip.getHp()),
+                worldBounds.getRight() - HP_INFO_MARGIN_X,worldBounds.getTop());
     }
 
     @Override

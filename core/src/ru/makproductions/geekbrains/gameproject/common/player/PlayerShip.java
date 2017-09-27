@@ -162,6 +162,8 @@ public class PlayerShip extends Ship {
         return frags;
     }
 
+    // The margin to remove a bug on real devices, when the ship gets stuck on the sides of the screen
+    private final float BOUNDARY_MARGIN = 0.01f;
     @Override
     public void update(float delta) {
 
@@ -171,10 +173,10 @@ public class PlayerShip extends Ship {
         }
 
         damageAnimation(delta);
-        if (getLeft() < worldBounds.getLeft()) {
+        if (getLeft() < worldBounds.getLeft() - BOUNDARY_MARGIN) {
             setLeft(worldBounds.getLeft());
             stop();
-        } else if (getRight() > worldBounds.getRight()) {
+        } else if (getRight() > worldBounds.getRight() + BOUNDARY_MARGIN) {
             setRight(worldBounds.getRight());
             stop();
         }
