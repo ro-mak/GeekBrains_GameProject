@@ -56,6 +56,6 @@ public class Bullet extends Sprite implements Collidable {
 
     @Override
     public void solveCollision(Collidable collidable2) {
-        if(!(collidable2 instanceof Bullet)&& collidable2!=owner )destroy();
+        if(!(collidable2 instanceof Bullet)&& collidable2!=owner)destroy();
     }
 }

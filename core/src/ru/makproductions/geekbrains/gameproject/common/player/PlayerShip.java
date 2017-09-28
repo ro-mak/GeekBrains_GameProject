@@ -24,6 +24,7 @@ public class PlayerShip extends Ship {
     private int rightPointer = INVALID_POINTER;
     private int frags;
     private boolean isMoving;
+    private boolean firstGame;
 
     public boolean isMoving() {
         return isMoving;
@@ -44,17 +45,27 @@ public class PlayerShip extends Ship {
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
         fireTexture = atlas.findRegion("Fire");
-        bulletSpeed.set(0f, 0.5f);
-        bulletDamage = 500;
         bulletTexture = atlas.findRegion("PlayerBullet");
-        bulletHeight = 0.05f;
-        reloadInterval = 0.25f;
-        hp = 5000;
-        fullHP = hp;
         regions[1] = atlas.findRegion("PlayerShipFullVersion2Damage1");
         regions[2] = atlas.findRegion("PlayerShipFullVersion2Damage2");
         regions[3] = atlas.findRegion("PlayerShipFullVersion2Damage3");
         fire = new Sprite(fireTexture);
+        firstGame = true;
+        onStartNewGame();
+    }
+
+    public void onStartNewGame(){
+        frags = 0;
+        this.speed0.x = -0.5f;
+        bulletSpeed.set(0f, 0.5f);
+        bulletDamage = 500;
+        bulletHeight = 0.05f;
+        reloadInterval = 0.25f;
+        if(!firstGame)position.x = worldBounds.position.x;
+        hp = 5000;
+        fullHP = hp;
+        cancelDestruction();
+        firstGame = false;
     }
 
     @Override
@@ -164,12 +175,14 @@ public class PlayerShip extends Ship {
 
     // The margin to remove a bug on real devices, when the ship gets stuck on the sides of the screen
     private final float BOUNDARY_MARGIN = 0.01f;
+
     @Override
     public void update(float delta) {
 
         if (hp <= 0 & !isDestroyed()){
             hp = 0;
             destroy();
+            boom();
         }
 
         damageAnimation(delta);
@@ -211,6 +224,7 @@ public class PlayerShip extends Ship {
     public void solveCollision(Collidable collidable2) {
         if (collidable2 instanceof Enemy) {
             destroy();
+            boom();
         } else if (collidable2 instanceof Bullet) {
             Bullet bullet = (Bullet) collidable2;
             if (bullet.getOwner() != this) {
@@ -218,7 +232,6 @@ public class PlayerShip extends Ship {
                 damaged = true;
             }
         }
-
     }
 
     public void plusFrag(){

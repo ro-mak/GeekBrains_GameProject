@@ -62,20 +62,20 @@ public class Enemy extends Ship {
 
     @Override
     protected void shoot() {
-        if (state == State.ACTION) {
-            EnemyBullet bullet1 = bulletPool.obtain();
-            bulletPosition.x = getLeft() + getHalfWidth() / 2;
-            bulletPosition.y = position.y + bullet_margin;
-            bullet1.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
-                    bulletHeight, worldBounds, bulletDamage, playerShip);
-            if (shotSound.play(0.3f) == -1) throw new RuntimeException("shotSound.play()==-1");
-            EnemyBullet bullet2 = bulletPool.obtain();
-            bulletPosition.x = getRight() - getHalfWidth() / 2;
-            bulletPosition.y = position.y + bullet_margin;
-            bullet2.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
-                    bulletHeight, worldBounds, bulletDamage, playerShip);
-            if (shotSound.play(0.3f) == -1) throw new RuntimeException("shotSound.play()==-1");
-        }
+            if (state == State.ACTION) {
+                EnemyBullet bullet1 = bulletPool.obtain();
+                bulletPosition.x = getLeft() + getHalfWidth() / 2;
+                bulletPosition.y = position.y + bullet_margin;
+                bullet1.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
+                        bulletHeight, worldBounds, bulletDamage, playerShip);
+                if (shotSound.play(0.3f) == -1) throw new RuntimeException("shotSound.play()==-1");
+                EnemyBullet bullet2 = bulletPool.obtain();
+                bulletPosition.x = getRight() - getHalfWidth() / 2;
+                bulletPosition.y = position.y + bullet_margin;
+                bullet2.setBullet(this, bulletTexture, bulletPosition, bulletSpeed,
+                        bulletHeight, worldBounds, bulletDamage, playerShip);
+                if (shotSound.play(0.3f) == -1) throw new RuntimeException("shotSound.play()==-1");
+            }
     }
 
     @Override
@@ -88,53 +88,61 @@ public class Enemy extends Ship {
 
     @Override
     public void solveCollision(Collidable collidable2) {
-        if (collidable2 instanceof PlayerShip) {
-            destroy();
-        }
-        if (collidable2 instanceof Bullet) {
-            Bullet bullet = (Bullet) collidable2;
-            if (bullet.getOwner() instanceof PlayerShip) {
-                damage(bullet.getDamage());
-                damaged = true;
+        if(!isDestroyed()) {
+            if (collidable2 instanceof PlayerShip) {
+                destroy();
+            }
+            if (collidable2 instanceof Bullet) {
+                Bullet bullet = (Bullet) collidable2;
+                if (bullet.getOwner() instanceof PlayerShip) {
+                    damage(bullet.getDamage());
+                    damaged = true;
+                }
             }
         }
     }
 
     @Override
     public void update(float deltaTime) {
-        if (this.getTop() <= worldBounds.getTop()) {
-            state = State.ACTION;
-        }
-        if (state == State.ACTION) {
-            if (hp <= 0) {
-                hp = 0;
-                playerShip.plusFrag();
-                destroy();
+        if(!isDestroyed()) {
+            if (this.getTop() <= worldBounds.getTop()) {
+                state = State.ACTION;
             }
-            if (this.getBottom() <= worldBounds.getBottom()) {
-                playerShip.damage(bulletDamage);
-                destroy();
-            }
+            if (state == State.ACTION) {
+                if (hp <= 0) {
+                    hp = 0;
+                    playerShip.plusFrag();
+                    destroy();
+                    boom();
+                    return;
+                }
+                if (this.getBottom() <= worldBounds.getBottom()) {
+                    playerShip.damage(bulletDamage);
+                    destroy();
+                    boom();
+                    return;
+                }
 
-            damageAnimation(deltaTime);
+                damageAnimation(deltaTime);
 
-            position.mulAdd(speed0, deltaTime);
-            if (playerShip.isMoving()) {
-                position.x -= playerShip.getSpeed().x / 1000;
-            }
+                position.mulAdd(speed0, deltaTime);
+                if (playerShip.isMoving()) {
+                    position.x -= playerShip.getSpeed().x / 1000;
+                }
 
-            reloadTimer += deltaTime;
-            if (reloadTimer >= reloadInterval) {
-                reloadTimer = 0f;
-                shoot();
+                reloadTimer += deltaTime;
+                if (reloadTimer >= reloadInterval) {
+                    reloadTimer = 0f;
+                    shoot();
+                }
+            } else if (state == State.DESCEND) {
+                position.mulAdd(descendSpeed, deltaTime);
+                if (playerShip.isMoving()) {
+                    position.x -= playerShip.getSpeed().x / 1000;
+                }
+            } else {
+                throw new RuntimeException("Unknown state: " + state);
             }
-        } else if (state == State.DESCEND) {
-            position.mulAdd(descendSpeed, deltaTime);
-            if (playerShip.isMoving()) {
-                position.x -= playerShip.getSpeed().x / 1000;
-            }
-        } else {
-            throw new RuntimeException("Unknown state: " + state);
         }
     }
 

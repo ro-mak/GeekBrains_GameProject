@@ -24,4 +24,9 @@ public class EnemyFabric {
         enemy.setEnemy(enemyTexture, 0f, vy, height, bulletPool,
                 enemyPool.getWorldBounds(),playerShip,explosionPool,shotSound);
     }
+
+    public void onStartNewGame(){
+
+    }
+
 }

@@ -90,13 +90,11 @@ public class Ship extends Sprite implements Collidable {
             super.draw(batch);
     }
 
-    @Override
-    public void destroy() {
+    public void boom(){
         setEngineStarted(false);
         Explosion explosion = explosionPool.obtain();
         explosion.setExplosion(this.height, this.position);
         speed0.setZero();
-        super.destroy();
     }
 
     protected void startEngine(SpriteBatch batch) {
@@ -108,7 +106,7 @@ public class Ship extends Sprite implements Collidable {
     }
 
     public void update(float delta) {
-
+        if(isDestroyed())boom();
     }
 
     @Override
