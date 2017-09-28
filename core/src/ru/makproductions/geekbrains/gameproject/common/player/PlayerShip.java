@@ -55,13 +55,17 @@ public class PlayerShip extends Ship {
     }
 
     public void onStartNewGame(){
+        stop();
         frags = 0;
         this.speed0.x = -0.5f;
         bulletSpeed.set(0f, 0.5f);
         bulletDamage = 500;
         bulletHeight = 0.05f;
         reloadInterval = 0.25f;
-        if(!firstGame)position.x = worldBounds.position.x;
+        if(!firstGame){
+            position.x = worldBounds.position.x;
+            setEngineStarted(true);
+        }
         hp = 5000;
         fullHP = hp;
         cancelDestruction();

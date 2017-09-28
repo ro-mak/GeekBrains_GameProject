@@ -50,12 +50,10 @@ public class ScaledTouchUpButton extends Sprite {
     public boolean touchUp(Vector2 touch, int pointer) {
         if(!touched || this.pointer != pointer)return false;
         touched = false;
-        returnScale();
         if(isMe(touch)) {
-            scaleUp();
             actionListener.actionPerformed(this);
         }
-
+        returnScale();
         return true;
     }
 

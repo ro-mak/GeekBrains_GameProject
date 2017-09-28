@@ -23,11 +23,20 @@ import ru.makproductions.geekbrains.gameproject.engine.Base2DScreen;
 import ru.makproductions.geekbrains.gameproject.engine.Font;
 import ru.makproductions.geekbrains.gameproject.engine.Sprite2DTexture;
 import ru.makproductions.geekbrains.gameproject.engine.StrBuilder;
+import ru.makproductions.geekbrains.gameproject.engine.buttons.ActionListener;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rnd;
+import ru.makproductions.geekbrains.gameproject.screens.game.ui.RestartButton;
 
 
-public class GameScreen extends Base2DScreen {
+public class GameScreen extends Base2DScreen implements ActionListener {
+
+    @Override
+    public void actionPerformed(Object source) {
+        if(source == restartButton){
+            startNewGame();
+        }
+    }
 
     private enum State {GAME_ON,GAME_OVER}
 
@@ -64,6 +73,9 @@ public class GameScreen extends Base2DScreen {
     private PlayerShip playerShip;
     private final float SHIP_HEIGHT = 0.15f;
 
+    private RestartButton restartButton;
+    private final float BUTTON_START_HEIGHT = 0.2f;
+
     @Override
     public void show() {
         super.show();
@@ -94,6 +106,7 @@ public class GameScreen extends Base2DScreen {
         enemyTextures[1] = gameAtlas.findRegion("EnemyEngineFire");
         enemyTextures[2] = gameAtlas.findRegion("EnemyBullet");
         enemyTextures[3] = gameAtlas.findRegion("EnemyShipDamaged");
+        restartButton = new RestartButton(BUTTON_START_HEIGHT,this);
         state = State.GAME_ON;
         playMusic();
     }
@@ -154,7 +167,6 @@ public class GameScreen extends Base2DScreen {
             playerShip.update(delta);
             if (playerShip.isDestroyed()) {
                 state = State.GAME_OVER;
-                startNewGame();
             }
         }
     }
@@ -191,6 +203,8 @@ public class GameScreen extends Base2DScreen {
             explosionPool.drawActiveObjects(batch);
             enemyPool.drawActiveObjects(batch);
             playerShip.draw(batch);
+        }else if(state == State.GAME_OVER){
+            restartButton.draw(batch);
         }
         printInfo();
         batch.end();
@@ -225,12 +239,14 @@ public class GameScreen extends Base2DScreen {
     protected void touchDown(Vector2 touch, int pointer) {
 
         if(state == State.GAME_ON)playerShip.touchDown(touch, pointer);
+        if(state == State.GAME_OVER) restartButton.touchDown(touch,pointer);
     }
 
     @Override
     protected void touchUp(Vector2 touch, int pointer)
     {
         if(state == State.GAME_ON)   playerShip.touchUp(touch, pointer);
+        if(state == State.GAME_OVER) restartButton.touchUp(touch,pointer);
     }
 
     @Override

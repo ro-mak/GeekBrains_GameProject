@@ -15,7 +15,7 @@ import ru.makproductions.geekbrains.gameproject.common.stars.StarsOfMenu;
 import ru.makproductions.geekbrains.gameproject.common.Background;
 import ru.makproductions.geekbrains.gameproject.screens.game.GameScreen;
 import ru.makproductions.geekbrains.gameproject.screens.menu.ui.ButtonExit;
-import ru.makproductions.geekbrains.gameproject.screens.menu.ui.ButtonStartGame;
+import ru.makproductions.geekbrains.gameproject.screens.menu.ui.ButtonStartGameMENU;
 
 public class MenuScreen extends Base2DScreen implements ActionListener {
 
@@ -31,7 +31,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     private MenuShip ship;
     private final float SHIP_HEIGHT = 0.35f;
 
-    private ButtonStartGame startButton;
+    private ButtonStartGameMENU startButton;
     private final float BUTTON_START_HEIGHT = 0.2f;
 
     private ButtonExit exitButton;
@@ -58,7 +58,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
             stars[i] = new StarsOfMenu(menuAtlas.findRegion("Star")
                     , vx, vy, starHeight);
         }
-        startButton = new ButtonStartGame(BUTTON_START_HEIGHT,this);
+        startButton = new ButtonStartGameMENU(BUTTON_START_HEIGHT,this);
         exitButton = new ButtonExit(menuAtlas,BUTTON_EXIT_HEIGHT,this);
         ship = new MenuShip(menuAtlas,0,0,SHIP_HEIGHT,new Vector2(0f,-0.2f));
         playMusic();

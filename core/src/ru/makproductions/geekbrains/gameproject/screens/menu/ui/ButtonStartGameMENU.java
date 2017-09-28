@@ -11,13 +11,13 @@ import ru.makproductions.geekbrains.gameproject.engine.buttons.ScaledTouchUpButt
 import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gameproject.engine.math.Rect;
 
 
-public class ButtonStartGame extends ScaledTouchUpButton{
+    public class ButtonStartGameMENU extends ScaledTouchUpButton{
 
     private static Font font = new Font("fonts/font.fnt","fonts/font.png");
 
     private final float BUTTON_APPEARANCE_HEIGHT = 0.1f;
 
-    public ButtonStartGame(float height, ActionListener actionListener) {
+    public ButtonStartGameMENU(float height, ActionListener actionListener) {
         super(height, actionListener);
         regions = new TextureRegion[1];
         regions[0] = font.getRegion();
@@ -29,22 +29,30 @@ public class ButtonStartGame extends ScaledTouchUpButton{
 
     @Override
     public void draw(SpriteBatch batch) {
-        font.draw(batch,"Start! ", position.x - 0.2f,position.y);
+        font.draw(batch,"Start! ", position.x - 0.2f ,position.y);
     }
 
+    private Vector2 changePosition = new Vector2(-0.05f,0.01f);
+    private Vector2 returnPosition = new Vector2(0.05f,-0.01f);
     @Override
     protected void scaleUp() {
        font.getData().setScale(font.getScaleX()+scaleSize,font.getScaleY()+scaleSize);
+        position.mulAdd(changePosition,1f);
+        //System.out.println("Scale up"+position);
     }
 
     @Override
     protected void scaleDown() {
         font.getData().setScale(font.getScaleX()-scaleSize,font.getScaleY()-scaleSize);
+        position.mulAdd(returnPosition,1f);
+      //  System.out.println("Scale down"+position);
     }
 
     @Override
     protected void returnScale() {
         font.getData().setScale(0.001f);
+        position.mulAdd(changePosition,1f);
+       // System.out.println("Return scale"+position);
     }
 
     @Override
