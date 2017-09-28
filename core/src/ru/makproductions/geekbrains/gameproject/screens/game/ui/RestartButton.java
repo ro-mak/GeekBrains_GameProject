@@ -26,12 +26,6 @@ import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gamepro
         scaleSize = 0.0003f;
         font.getData().setScale(0.001f);
         originalPosition.set(position);
-                System.out.println("Start!");
-        System.out.println("ScaleX " + font.getScaleX());
-        System.out.println("ScaleY " + font.getScaleY());
-        System.out.println("ScaleSize " + scaleSize);
-        System.out.println("Scale " + scale);
-        System.out.println(position);
     }
 
     private StrBuilder strBuilder = new StrBuilder();
@@ -61,15 +55,15 @@ import ru.makproductions.geekbrains.gameproject.engine.ru.makproductions.gamepro
     protected void scaleDown() {
         font.getData().setScale(font.getScaleX()-scaleSize,font.getScaleY()-scaleSize);
         position.mulAdd(changePosition,1f);
-        System.out.println("Scale down"+position);
+//        System.out.println("Scale down"+position);
     }
 
     @Override
     protected void returnScale() {
         font.getData().setScale(0.001f);
         position.set(originalPosition);
-        System.out.println("original pos" + originalPosition);
-        System.out.println("Return scale"+position);
+//        System.out.println("original pos" + originalPosition);
+//        System.out.println("Return scale"+position);
     }
 
     @Override

@@ -17,6 +17,7 @@ import ru.makproductions.geekbrains.gameproject.engine.sprites.Sprite;
 public class Enemy extends Ship {
 
     private enum State {DESCEND, ACTION}
+    private int stage;
 
     private PlayerShip playerShip;
     private EnemyBulletPool bulletPool;
@@ -28,7 +29,7 @@ public class Enemy extends Ship {
 
     public void setEnemy(TextureRegion[] enemyTexture, float vx, float vy, float height,
                          EnemyBulletPool bulletPool, Rect worldBounds,
-                         PlayerShip playerShip, ExplosionPool explosionPool, Sound shotSound) {
+                         PlayerShip playerShip, ExplosionPool explosionPool, Sound shotSound,int stage) {
         this.shotSound = shotSound;
         regions = enemyTexture;
         fireTexture = enemyTexture[1];
@@ -45,12 +46,13 @@ public class Enemy extends Ship {
         float positionX = Rnd.nextFloat(worldBounds.getLeft() + halfWidth, worldBounds.getRight() - halfWidth);
         position.set(positionX, worldBounds.getTop());
         setEngineStarted(true);
-
-        hp = (int) (100 / height);
+        this.stage = stage;
+        hp = (int) (stage*1000000 * (height*height*height));
+      //  System.out.println(hp);
         bulletHeight = getHalfHeight();
         bullet_margin = -(getHalfHeight());
-        bulletSpeed.set(0f, -0.05f / height);
-        bulletDamage = (int) (10 / height);
+        bulletSpeed.set(0f, -0.05f / (height));
+        bulletDamage = (int) (stage*100000 * (height*height*height));
         reloadInterval = height * 30;
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;

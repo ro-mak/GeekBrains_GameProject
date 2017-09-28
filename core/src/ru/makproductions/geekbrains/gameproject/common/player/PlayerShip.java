@@ -72,6 +72,10 @@ public class PlayerShip extends Ship {
         firstGame = false;
     }
 
+    public void newStage(){
+        frags = 0;
+    }
+
     @Override
     protected void startEngine(SpriteBatch batch) {
         fire.position.y = this.getBottom() - 0.05f;
@@ -222,6 +226,12 @@ public class PlayerShip extends Ship {
         }
 //        System.out.println("Damage Timer: " + damageTimer);
 //        System.out.println("Current Frame" + currentFrame);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        stop();
     }
 
     @Override

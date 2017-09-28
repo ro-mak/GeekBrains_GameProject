@@ -74,7 +74,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     private final float SHIP_HEIGHT = 0.15f;
 
     private RestartButton restartButton;
-    private final float BUTTON_START_HEIGHT = 0.2f;
+    private final float BUTTON_RESTART_HEIGHT = 0.25f;
 
     @Override
     public void show() {
@@ -106,13 +106,15 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         enemyTextures[1] = gameAtlas.findRegion("EnemyEngineFire");
         enemyTextures[2] = gameAtlas.findRegion("EnemyBullet");
         enemyTextures[3] = gameAtlas.findRegion("EnemyShipDamaged");
-        restartButton = new RestartButton(BUTTON_START_HEIGHT,this);
+        restartButton = new RestartButton(BUTTON_RESTART_HEIGHT,this);
         state = State.GAME_ON;
+        isStagePrinted = true;
         playMusic();
     }
 
 
     private void startNewGame(){
+        isStagePrinted = true;
         bulletPool.freeAllActiveObjects();
         enemyBulletPool.freeAllActiveObjects();
         enemyPool.freeAllActiveObjects();
@@ -148,27 +150,52 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         draw();
     }
 
-    float timer;
+    private float enemyCreateTimer;
+    private float stagePrintTimer;
+    private int previousStage = 1;
+    private int stage;
 
     private void update(float delta) {
+        background.update(delta);
+        for (int i = 0; i < stars.length; i++) {
+            stars[i].update(delta);
+        }
+        explosionPool.updateActiveSprites(delta);
         if(state == State.GAME_ON) {
-            if ((timer += delta) >= 3) {
-                timer = 0;
+            if ((enemyCreateTimer += delta) >= 3) {
+                enemyCreateTimer = 0;
                 enemyFabric.createEnemy(enemyTextures, enemyBulletPool, playerShip, explosionPool, enemyShotSound);
-            }
-            background.update(delta);
-            for (int i = 0; i < stars.length; i++) {
-                stars[i].update(delta);
             }
             bulletPool.updateActiveSprites(delta);
             enemyBulletPool.updateActiveSprites(delta);
-            explosionPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
             playerShip.update(delta);
             if (playerShip.isDestroyed()) {
                 state = State.GAME_OVER;
             }
         }
+        updateStages(delta);
+    }
+
+    private void updateStages(float delta){
+        if(playerShip.getFrags()>=10){
+            playerShip.newStage();
+            enemyFabric.newStage();
+        }
+        stage = enemyFabric.getStage();
+        if(stage != previousStage){
+            isStagePrinted = true;
+            System.out.println("stage changed " + stage);
+            previousStage = stage;
+        }
+        if(isStagePrinted){
+            stagePrintTimer+=delta;
+        }
+        if(stagePrintTimer >=2){
+            isStagePrinted = false;
+            stagePrintTimer = 0;
+        }
+
     }
 
     private void checkCollisions() {
@@ -197,10 +224,10 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         for (int i = 0; i < stars.length; i++) {
             stars[i].draw(batch);
         }
+        explosionPool.drawActiveObjects(batch);
         if(state == State.GAME_ON) {
             bulletPool.drawActiveObjects(batch);
             enemyBulletPool.drawActiveObjects(batch);
-            explosionPool.drawActiveObjects(batch);
             enemyPool.drawActiveObjects(batch);
             playerShip.draw(batch);
         }else if(state == State.GAME_OVER){
@@ -212,9 +239,16 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     private static final String FRAGS = "Frags: ";
     private static final String HP = "HP: ";
+    private static final String STAGE = "STAGE ";
     private static final float HP_INFO_MARGIN_X = 0.25f;
     private StrBuilder strBuilder = new StrBuilder();
+
+    private boolean isStagePrinted;
     private void printInfo(){
+        if(isStagePrinted){
+            font.draw(batch,strBuilder.clear().append(STAGE).append(stage),
+                    worldBounds.position.x - 0.15f,worldBounds.position.y + 0.1f);
+        }
         font.draw(batch,strBuilder.clear().append(FRAGS).append(playerShip.getFrags()),
                 worldBounds.getLeft(),worldBounds.getTop());
         font.draw(batch,strBuilder.clear().append(HP).append(playerShip.getHp()),
