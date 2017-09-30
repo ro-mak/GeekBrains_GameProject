@@ -137,7 +137,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     }
 
     private void playMusic() {
-        music_level1 = Gdx.audio.newMusic(Gdx.files.internal("music/StarFighterMusicWarriorDrums.wav"));
+        music_level1 = Gdx.audio.newMusic(Gdx.files.internal("music/StarFighterMusicWarriorDrums.ogg"));
         music_level1.setLooping(true);
         music_level1.play();
     }
